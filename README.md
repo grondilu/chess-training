@@ -1,2 +1,3 @@
 # chess-training
-code for chess training
+
+HTML/javascript code for chess training
