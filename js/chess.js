@@ -540,5 +540,3 @@ class Chessboard {
     context.restore();
   }
 }
-
-console.log(new Piece(WHITE, PAWN).toString());
