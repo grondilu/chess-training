@@ -59,7 +59,7 @@ const COLORS = {
 
 const startpos = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
-const BOARD_SIZE = 400 // pixels
+const BOARD_SIZE = 600 // pixels
 const canvas = document.getElementById("board");
 canvas.height = canvas.width  = BOARD_SIZE;
 const ctx = canvas.getContext("2d");
@@ -617,17 +617,21 @@ function draw() {
   position.pieces.forEach(
     (piece, s) => {
       let square = new Square(s);
-      if (movingPiece !== null && square.name == movingPiece.square.name) {
-        piece
-          .draw(
-            ctx,
-            flipped ? 7 - square.x : square.x, flipped ? 7 - square.y : square.y,
-            (movingPiece.mouse.to.x - movingPiece.mouse.from.x)/(BOARD_SIZE/8),
-            (movingPiece.mouse.to.y - movingPiece.mouse.from.y)/(BOARD_SIZE/8)
-          );
-      } else piece.draw(ctx, flipped ? 7 - square.x : square.x, flipped ? 7 - square.y : square.y);
+      if (movingPiece == null || square.name !== movingPiece.square.name) 
+      piece.draw(ctx, flipped ? 7 - square.x : square.x, flipped ? 7 - square.y : square.y);
     }
   );
+  if (movingPiece !== null) {
+    let square = new Square(movingPiece.square.name);
+    position
+      .pieces.get(square.name)
+      .draw(
+	ctx,
+	flipped ? 7 - square.x : square.x, flipped ? 7 - square.y : square.y,
+	(movingPiece.mouse.to.x - movingPiece.mouse.from.x)/(BOARD_SIZE/8),
+	(movingPiece.mouse.to.y - movingPiece.mouse.from.y)/(BOARD_SIZE/8)
+      );
+  }
 }
 
 function animate() {
