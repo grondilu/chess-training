@@ -1,0 +1,13 @@
+{
+  "dependencies": {
+    "chessground": "^9.1.1"
+  },
+  "scripts": {
+    "bundle": "esbuild node_modules/chessground/src/chessground.ts --bundle --outfile=dist/bundle.js"
+  }
+  ,
+  "devDependencies": {
+    "esbuild": "^0.24.0",
+    "typescript": "^5.6.3"
+  }
+}
