@@ -3,7 +3,7 @@
     "chessground": "^9.1.1"
   },
   "scripts": {
-    "bundle": "esbuild node_modules/chessground/src/chessground.ts --bundle --outfile=dist/bundle.js"
+    "bundle": "esbuild node_modules/chessground/src/chessground.ts --bundle --outfile=dist/bundle.js --format=esm"
   }
   ,
   "devDependencies": {
