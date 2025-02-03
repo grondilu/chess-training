@@ -7,6 +7,7 @@ Very much WIP.
 ## Dependencies
 
 - [Chessground](https://github.com/lichess-org/chessground)
+- [chess.js](https://github.com/jhlywa/chess.js)
 
 ## See also
 
