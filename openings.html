@@ -38,18 +38,6 @@
       import { book        } from './opening-book.js';
       import { SRS         } from './spaced-repetition.js';
 
-      const toDests = (chess) => {
-	let dests = new Map();
-	SQUARES.forEach((s) => {
-	  const ms = chess.moves({ square: s, verbose: true });
-	  if (ms.length) dests.set(s, ms.map((m) => m.to));
-	});
-	return dests;
-      };
-
-      // https://stackoverflow.com/questions/951021/what-is-the-javascript-version-of-sleep
-      function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
-
       if (typeof localStorage == 'undefined') {
 	alert("web storage is not supported");
 	throw "no web storage";
@@ -59,24 +47,55 @@
       const storage = DEBUG ? sessionStorage : localStorage;
       function log(msg) { if (DEBUG) console.log(msg); }
 
+      const halfMoveRegex = /(?:O-O(?:-O)?|[KQBNR](?:[a-h]|[1-8]|[a-h][1-8])??x?[a-h][1-8]|(?:[a-h]x)?[a-h][1-8](?:=[QBNR])?)\+?!?/g;
+
+      const toDests = chess => {
+	let dests = new Map();
+	SQUARES.forEach((s) => {
+	  const ms = chess.moves({ square: s, verbose: true });
+	  if (ms.length) dests.set(s, ms.map((m) => m.to));
+	});
+	return dests;
+      };
+
+      const AUTOMOVE_DELAY = 500; //ms
+
+      // https://stackoverflow.com/questions/951021/what-is-the-javascript-version-of-sleep
+      function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+
       function pack(line)   { return `${line.compacted_moves}/${line.color}`; }
       function unpack(line) {
 	let split = line.split('/');
 	return { compacted_moves: split[0], color: split[1] }
       }
 
-      var lines = [];
-      for (let color of ['white', 'black'])
-	for (let compacted_moves of repertoire[color]) {
-	  let line = { compacted_moves, color };
-	  lines.push(line);
+      async function main() {
+	let lines = Array.from(
+			    function *() {
+			      for (let color of ['white', 'black'])
+				for (let compacted_moves of repertoire[color])
+				  yield { compacted_moves, color };
+			    }()
+			  ),
+	    srs   = new SRS(storage, lines.map(pack));
+
+	while (true) {
+	  let line    = srs.pick(),
+	      success = await quiz(unpack(line));
+
+	  document.getElementById("info").innerHTML = '';
+
+	  if (success) { srs.pass(line); }
+	  else         { srs.fail(line); }
+
+	  document.getElementById("stats").innerHTML = Array.from(srs.stats.values()).join('/');
 	}
-      var srs = new SRS(storage, lines.map(pack));
+      }
 
-
-      const halfMoveRegex = /(?:O-O(?:-O)?|[KQBNR](?:[a-h]|[1-8]|[a-h][1-8])??x?[a-h][1-8]|(?:[a-h]x)?[a-h][1-8](?:=[QBNR])?)\+?!?/g;
+      main();
 
       function identifyOpening(compacted_moves) {
+	if (compacted_moves == '') return "starting position"; 
 	return book
 	  .filter(x => compacted_moves.substr(0, x[2].length) == x[2])
 	  // https://chatgpt.com/share/6790de81-57fc-8001-bd96-65afd0006857
@@ -88,11 +107,12 @@
 	log(identifyOpening(line));
       */
 
-      function quiz(line) {
+      async function quiz(line) {
 	let chess = new Chess(),
 	    color = line.color,
 	    moves = line.compacted_moves.match(halfMoveRegex),
 	    board = Chessground(document.getElementById('chessboard'), {});
+
 	if (color == 'black') {
 	  // make first move
 	  if (moves.length > 0) {
@@ -102,65 +122,67 @@
 	  }
 	}
 
-	board.set(
-	  {
-	      orientation: color,
-	      selectable: { enable: true },
-	      movable: {
-		free: false,
-		dests: toDests(chess),
-		//showDests: true,
-		events: {
-		  after: async (from, to, metadata) => {
-		    document.getElementById('soundMove').play();
-		    if (moves.length > 0) {
-		      try {
-			let move = chess.move({ from, to }),
-			expected_move = moves.shift();
-			// Is the user's move the expected one?
-			if (move.san == expected_move) {
-			  log("good move");
-			  //   - shift moves
-			  //   - make next half-move if defined
-			  if (moves.length > 0) {
-			    let nextmove = chess.move(moves.shift());
-			    await sleep(500);
-			    board.move(nextmove.from, nextmove.to);
-			    board.set({ movable: { dests: toDests(chess) } });
-			    document.getElementById('soundMove').play();
+	return new Promise(
+	  (resolve, reject) => {
+	    board.set(
+	      {
+		  orientation: color,
+		  selectable: { enable: true },
+		  events: {
+		      change: () => { document.getElementById("info").innerHTML = identifyOpening(chess.history().join('')); },
+		  },
+		  movable: {
+		    free: false,
+		    dests: toDests(chess),
+		    showDests: true,
+		    events: {
+		      after: async (from, to, metadata) => {
+			document.getElementById('soundMove').play();
+			if (moves.length > 0) {
+			  try {
+			    let move = chess.move({ from, to }),
+			    expected_move = moves.shift();
+			    // Is the user's move the expected one?
+			    if (move.san == expected_move) {
+			      log("good move");
+			      //   - shift moves
+			      //   - make next half-move if defined
+			      if (moves.length > 0) {
+				let nextmove = chess.move(moves.shift());
+				board.move(nextmove.from, nextmove.to);
+				board.set({ movable: { dests: toDests(chess) } });
+				document.getElementById('soundMove').play();
+			      }
+			      if (moves.length == 0) {
+				document.getElementById('soundSuccess').play();
+				log("success! stopping board");
+				board.stop();
+				resolve(true);
+			      }
+			    } else {
+			      document.getElementById('soundWrong').play();
+			      log(`wrong move: ${expected_move} was expected`);
+			      chess.undo();
+			      board.set({ fen: chess.fen() });
+			      let move = chess.move(expected_move);
+			      board.move(move.from, move.to);
+			      board.stop();
+			      await sleep(5000);
+			      resolve(false);
+			      //alert(`wrong move! ${expected_move} was expected.`);
+			    }
 			  }
-			  if (moves.length == 0) {
-			    document.getElementById('soundSuccess').play();
-			    log("success! stopping board");
-			    srs.pass(pack(line));
-			    board.stop();
+			  catch (err) {
+			    board.set({ fen: chess.fen() });
+			    console.warn(err);
 			  }
-			} else {
-			  document.getElementById('soundWrong').play();
-			  log(`wrong move: ${expected_move} was expected`);
-			  chess.undo();
-			  await sleep(1000);
-			  board.set({ fen: chess.fen() });
-			  let move = chess.move(expected_move);
-			  board.move(move.from, move.to);
-			  board.stop();
-			  srs.fail(pack(line));
-			  //alert(`wrong move! ${expected_move} was expected.`);
-			}
+			} else { console.warn("unexpected user input, stopping board"); board.stop(); }
 		      }
-		      catch (err) {
-			board.set({ fen: chess.fen() });
-			console.warn(err);
-		      }
-		    } else { console.warn("unexpected user input, stopping board"); board.stop(); }
+		    }
 		  }
 		}
-	      }
-	    }
-	);
-	log(line);
-	document.getElementById("info").innerHTML = identifyOpening(line.compacted_moves);
-
+	    );
+	});
       }
 
       /*
@@ -184,25 +206,6 @@
       }
       */
 
-      function quiznewline() {
-	let line = srs.pick();
-	log(line);
-	if (typeof(line) == 'undefined') {
-	  throw "undefined line??";
-	} else { quiz(unpack(line)); }
-      }
-
-      document.getElementById("thebutton").onclick =
-	() => {
-	  console.clear();
-	  quiznewline();
-	  let stats = srs.stats;
-	  document.getElementById('stats').innerHTML = Array.from(stats.values()).join('/');
-	};
-
-      quiznewline();
-
-
     </script>
   </head>
   <body>
@@ -213,7 +216,6 @@
     <audio id=soundSuccess src=assets/sounds/success.wav   type="audio/wav"></audio>
 
     <div class="chessground" id="chessboard"></div>
-    <br><button type=button id=thebutton>pick line</button>
     <p id="info"></p>
     <p id="stats"></p>
   </body>
