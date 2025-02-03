@@ -59,6 +59,7 @@
       };
 
       const AUTOMOVE_DELAY = 500; //ms
+      const PENALITY_DELAY = 5000; //ms
 
       // https://stackoverflow.com/questions/951021/what-is-the-javascript-version-of-sleep
       function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
@@ -167,7 +168,7 @@
 			      let move = chess.move(expected_move);
 			      board.move(move.from, move.to);
 			      board.stop();
-			      await sleep(5000);
+			      await sleep(PENALITY_DELAY);
 			      resolve(false);
 			      //alert(`wrong move! ${expected_move} was expected.`);
 			    }
