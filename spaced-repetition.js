@@ -40,13 +40,11 @@ export class SRS {
     get stats() {
 	let storage = this.storage,
 	    now     = new Date();
-	return {
-	    "total number of items": this.items.length,
-	    "number of items viewed at least once":
-		this.items.filter(item => JSON.parse(this.storage.getItem(item)).score >= 0).length,
-	    "number of items due for review":
-		this.items.filter(item => { let data = JSON.parse(storage.getItem(item)); return data.score >= 0 && data.time + intervals[data.score] < now.getTime() }).length
-	};
+	return new Map([
+	    ["total number of items", this.items.length],
+	    ["number of items viewed at least once", this.items.filter(item => JSON.parse(this.storage.getItem(item)).score >= 0).length],
+	    ["number of items due for review", this.items.filter(item => { let data = JSON.parse(storage.getItem(item)); return data.score >= 0 && data.time + intervals[data.score] < now.getTime() }).length]
+	])
     }
 
     pick() {
@@ -76,4 +74,4 @@ export class SRS {
 
 }
 
-// vi: shiftwidth=4 nu
+// vi: shiftwidth=4 nu nowrap
