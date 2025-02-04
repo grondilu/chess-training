@@ -43,7 +43,7 @@
 	throw "no web storage";
       }
 
-      const DEBUG = false;
+      const DEBUG = true;
       const storage = DEBUG ? sessionStorage : localStorage;
       function log(msg) { if (DEBUG) console.log(msg); }
 
@@ -63,6 +63,16 @@
 
       // https://stackoverflow.com/questions/951021/what-is-the-javascript-version-of-sleep
       function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+
+      function makeMove(board, move) {
+	board.move(move.from, move.to);
+	console.log(move);
+	if (move.isEnPassant()) {
+	  let row = board.orientation == 'white' ? 4 : 5,
+	      col = move.to.substr(0, 1);
+	  board.setPieces(new Map([[col+row], [false]]));
+	}
+      }
 
       function pack(line)   { return `${line.compacted_moves}/${line.color}`; }
       function unpack(line) {
@@ -118,7 +128,8 @@
 	  // make first move
 	  if (moves.length > 0) {
 	    let move = chess.move(moves.shift());
-	    board.move(move.from, move.to);
+	    //board.move(move.from, move.to);
+	    makeMove(board, move);
 	    //document.getElementById('soundMove').play();
 	  }
 	}
@@ -142,7 +153,8 @@
 			if (moves.length > 0) {
 			  try {
 			    let move = chess.move({ from, to }),
-			    expected_move = moves.shift();
+				expected_move = moves.shift();
+			    makeMove(board, move);
 			    // Is the user's move the expected one?
 			    if (move.san == expected_move) {
 			      log("good move");
@@ -150,7 +162,8 @@
 			      //   - make next half-move if defined
 			      if (moves.length > 0) {
 				let nextmove = chess.move(moves.shift());
-				board.move(nextmove.from, nextmove.to);
+				//board.move(nextmove.from, nextmove.to);
+				makeMove(board, nextmove);
 				board.set({ movable: { dests: toDests(chess) } });
 				document.getElementById('soundMove').play();
 			      }
@@ -166,7 +179,8 @@
 			      chess.undo();
 			      board.set({ fen: chess.fen() });
 			      let move = chess.move(expected_move);
-			      board.move(move.from, move.to);
+			      //board.move(move.from, move.to);
+			      makeMove(board, move);
 			      board.stop();
 			      await sleep(PENALITY_DELAY);
 			      resolve(false);
