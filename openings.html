@@ -30,8 +30,8 @@
     </style>
 
     <script type="module">
-      import { Chessground } from './node_modules/chessground/dist/chessground.js';
-      import { Chess, SQUARES  } from './node_modules/chess.js/dist/esm/chess.js';
+      import { Chessground } from './dist/chessground/src/chessground.js';
+      import { Chess, SQUARES  } from './dist/chess.js/dist/esm/chess.js';
       import { repertoire  } from './repertoire.js';
       import { book        } from './opening-book.js';
       import { SRS         } from './spaced-repetition.js';
@@ -64,7 +64,6 @@
 
       function makeMove(board, move) {
 	board.move(move.from, move.to);
-	console.log(move);
 	if (move.isEnPassant()) {
 	  let row = board.orientation == 'white' ? 4 : 5,
 	      col = move.to.substr(0, 1);
@@ -229,8 +228,14 @@
     <audio id=soundSuccess src=assets/sounds/success.wav   type="audio/wav"></audio>
 
     <div class="chessground" id="chessboard"></div>
-    <p id="info"></p>
-    <p id="stats"></p>
+    <table>
+      <tr>
+	<td> <div id="info"></div> </td>
+      </tr>
+      <tr>
+	<td> <div id="stats"></div> </td>
+      </tr>
+    </table>
   </body>
 </html>
 <!--
