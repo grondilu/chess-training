@@ -88,10 +88,12 @@
 	    srs   = new SRS(storage, lines.map(pack));
 
 	while (true) {
+	  document.getElementById("info").innerHTML = '';
+	  setTimeout(() => document.getElementById("stats").innerHTML = '', 5000);
+
 	  let line    = srs.pick(),
 	      success = await quiz(unpack(line));
 
-	  document.getElementById("info").innerHTML = '';
 
 	  if (success) { srs.pass(line); }
 	  else         { srs.fail(line); }
