@@ -10,10 +10,12 @@
     <link rel="stylesheet" type="text/css" href="assets/chessground.brown.css" />
     <link rel="stylesheet" type="text/css" href="assets/chessground.cburnett.css" />
     <style>
+      /*
       body {
         display: flex;
         flex-wrap: wrap;
       }
+      */
 
       body > div {
         margin: 10px;
@@ -29,197 +31,7 @@
       }
     </style>
 
-    <script type="module">
-      import { Chessground } from './dist/chessground/src/chessground.js';
-      import { Chess, SQUARES  } from './dist/chess.js/dist/esm/chess.js';
-      import { repertoire  } from './repertoire.js';
-      import { book        } from './opening-book.js';
-      import { SRS         } from './spaced-repetition.js';
-
-      if (typeof localStorage == 'undefined') {
-	alert("web storage is not supported");
-	throw "no web storage";
-      }
-
-      const DEBUG = false;
-      const storage = DEBUG ? sessionStorage : localStorage;
-      function log(msg) { if (DEBUG) console.log(msg); }
-
-      const halfMoveRegex = /(?:O-O(?:-O)?|[KQBNR](?:[a-h]|[1-8]|[a-h][1-8])??x?[a-h][1-8]|(?:[a-h]x)?[a-h][1-8](?:=[QBNR])?)\+?!?/g;
-
-      const toDests = chess => {
-	let dests = new Map();
-	SQUARES.forEach((s) => {
-	  const ms = chess.moves({ square: s, verbose: true });
-	  if (ms.length) dests.set(s, ms.map((m) => m.to));
-	});
-	return dests;
-      };
-
-      const AUTOMOVE_DELAY = 500; //ms
-      const PENALITY_DELAY = 5000; //ms
-
-      // https://stackoverflow.com/questions/951021/what-is-the-javascript-version-of-sleep
-      function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
-
-      function makeMove(board, move) {
-	board.move(move.from, move.to);
-	if (move.isEnPassant()) {
-	  let row = board.orientation == 'white' ? 4 : 5,
-	      col = move.to.substr(0, 1);
-	  board.setPieces(new Map([[col+row], [false]]));
-	}
-      }
-
-      function pack(line)   { return `${line.compacted_moves}/${line.color}`; }
-      function unpack(line) {
-	let split = line.split('/');
-	return { compacted_moves: split[0], color: split[1] }
-      }
-
-      async function main() {
-	let lines = Array.from(
-			    function *() {
-			      for (let color of ['white', 'black'])
-				for (let compacted_moves of repertoire[color])
-				  yield { compacted_moves, color };
-			    }()
-			  ),
-	    srs   = new SRS(storage, lines.map(pack));
-
-	while (true) {
-	  document.getElementById("info").innerHTML = '';
-	  setTimeout(() => document.getElementById("stats").innerHTML = '', 5000);
-
-	  let line    = srs.pick(),
-	      success = await quiz(unpack(line));
-
-
-	  if (success) { srs.pass(line); }
-	  else         { srs.fail(line); }
-
-	  document.getElementById("stats").innerHTML = Array.from(srs.stats.values()).join('/');
-	}
-      }
-
-      main();
-
-      function identifyOpening(compacted_moves) {
-	if (compacted_moves == '') return "starting position"; 
-	return book
-	  .filter(x => compacted_moves.substr(0, x[2].length) == x[2])
-	  // https://chatgpt.com/share/6790de81-57fc-8001-bd96-65afd0006857
-	  .reduce((min, item) => min[2].length < item[2].length ? item : min)[1]
-      }
-      /* Test identifyOpening
-	var line = repertoire.white[35];
-	log(line);
-	log(identifyOpening(line));
-      */
-
-      async function quiz(line) {
-	let chess = new Chess(),
-	    color = line.color,
-	    moves = line.compacted_moves.match(halfMoveRegex),
-	    board = Chessground(document.getElementById('chessboard'), {});
-
-	if (color == 'black') {
-	  // make first move
-	  if (moves.length > 0) {
-	    let move = chess.move(moves.shift());
-	    //board.move(move.from, move.to);
-	    makeMove(board, move);
-	    //document.getElementById('soundMove').play();
-	  }
-	}
-
-	return new Promise(
-	  (resolve, reject) => {
-	    board.set(
-	      {
-		  orientation: color,
-		  selectable: { enable: true },
-		  events: {
-		      change: () => { document.getElementById("info").innerHTML = identifyOpening(chess.history().join('')); },
-		  },
-		  movable: {
-		    free: false,
-		    dests: toDests(chess),
-		    showDests: true,
-		    events: {
-		      after: async (from, to, metadata) => {
-			document.getElementById('soundMove').play();
-			if (moves.length > 0) {
-			  try {
-			    let move = chess.move({ from, to }),
-				expected_move = moves.shift();
-			    makeMove(board, move);
-			    // Is the user's move the expected one?
-			    if (move.san == expected_move) {
-			      log("good move");
-			      //   - shift moves
-			      //   - make next half-move if defined
-			      if (moves.length > 0) {
-				let nextmove = chess.move(moves.shift());
-				//board.move(nextmove.from, nextmove.to);
-				makeMove(board, nextmove);
-				board.set({ movable: { dests: toDests(chess) } });
-				document.getElementById('soundMove').play();
-			      }
-			      if (moves.length == 0) {
-				document.getElementById('soundSuccess').play();
-				log("success! stopping board");
-				board.stop();
-				resolve(true);
-			      }
-			    } else {
-			      document.getElementById('soundWrong').play();
-			      log(`wrong move: ${expected_move} was expected`);
-			      chess.undo();
-			      board.set({ fen: chess.fen() });
-			      let move = chess.move(expected_move);
-			      //board.move(move.from, move.to);
-			      makeMove(board, move);
-			      board.stop();
-			      await sleep(PENALITY_DELAY);
-			      resolve(false);
-			      //alert(`wrong move! ${expected_move} was expected.`);
-			    }
-			  }
-			  catch (err) {
-			    board.set({ fen: chess.fen() });
-			    console.warn(err);
-			  }
-			} else { console.warn("unexpected user input, stopping board"); board.stop(); }
-		      }
-		    }
-		  }
-		}
-	    );
-	});
-      }
-
-      /*
-      document.addEventListener(
-	'keydown',
-	e => {
-	  const keyName = e.key;
-	  if (keyName === 'f') {
-	    orientation = orientation == 'white' ? 'black' : 'white';
-	    quiz();
-	  }
-	}
-      );
-      */
-
-      /*
-      for (let sanmove of line.match(halfMoveRegex)) {
-	let move = chess.move(sanmove);
-	if (!move) throw "illegal move";
-	board.move(move.from, move.to);
-      }
-      */
-
+    <script type="module" src=openings.js>
     </script>
   </head>
   <body>
@@ -233,6 +45,9 @@
     <table>
       <tr>
 	<td> <div id="info"></div> </td>
+      </tr>
+      <tr>
+	<td> <div id="pgn"></div> </td>
       </tr>
       <tr>
 	<td> <div id="stats"></div> </td>
