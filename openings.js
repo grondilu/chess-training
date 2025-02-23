@@ -9,7 +9,7 @@ if (typeof localStorage == 'undefined') {
 	throw "no web storage";
 }
 
-const DEBUG = true;
+const DEBUG = false;
 const storage = DEBUG ? sessionStorage : localStorage;
 function log(msg) { if (DEBUG) console.log(msg); }
 
