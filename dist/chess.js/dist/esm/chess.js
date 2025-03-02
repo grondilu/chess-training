@@ -1,4 +1,4 @@
-// node_modules/.pnpm/chess.js@1.0.0/node_modules/chess.js/dist/esm/chess.js
+// node_modules/chess.js/dist/esm/chess.js
 var WHITE = "w";
 var BLACK = "b";
 var PAWN = "p";
@@ -941,8 +941,8 @@ var Chess = class {
   _castling = { w: 0, b: 0 };
   // tracks number of times a position has been seen for repetition checking
   _positionCount = {};
-  constructor(fen = DEFAULT_POSITION) {
-    this.load(fen);
+  constructor(fen = DEFAULT_POSITION, { skipValidation = false } = {}) {
+    this.load(fen, { skipValidation });
   }
   clear({ preserveHeaders = false } = {}) {
     this._board = new Array(128);

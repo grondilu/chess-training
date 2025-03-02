@@ -1,9 +1,9 @@
-// node_modules/.pnpm/chessground@9.1.1/node_modules/chessground/src/types.ts
+// node_modules/chessground/src/types.ts
 var colors = ["white", "black"];
 var files = ["a", "b", "c", "d", "e", "f", "g", "h"];
 var ranks = ["1", "2", "3", "4", "5", "6", "7", "8"];
 
-// node_modules/.pnpm/chessground@9.1.1/node_modules/chessground/src/util.ts
+// node_modules/chessground/src/util.ts
 var invRanks = [...ranks].reverse();
 var allKeys = Array.prototype.concat(
   ...files.map((c) => ranks.map((r) => c + r))
@@ -86,7 +86,7 @@ function computeSquareCenter(key, asWhite, bounds) {
   ];
 }
 
-// node_modules/.pnpm/chessground@9.1.1/node_modules/chessground/src/premove.ts
+// node_modules/chessground/src/premove.ts
 var diff = (a, b) => Math.abs(a - b);
 var pawn = (color) => (x1, y1, x2, y2) => diff(x1, x2) < 2 && (color === "white" ? (
   // allow 2 squares from first two ranks, for horde
@@ -125,7 +125,7 @@ function premove(pieces, key, canCastle) {
   return allPos.filter((pos2) => (pos[0] !== pos2[0] || pos[1] !== pos2[1]) && mobility(pos[0], pos[1], pos2[0], pos2[1])).map(pos2key);
 }
 
-// node_modules/.pnpm/chessground@9.1.1/node_modules/chessground/src/board.ts
+// node_modules/chessground/src/board.ts
 function callUserFunction(f, ...args) {
   if (f)
     setTimeout(() => f(...args), 1);
@@ -424,7 +424,7 @@ function getSnappedKeyAtDomPos(orig, pos, asWhite, bounds) {
 }
 var whitePov = (s) => s.orientation === "white";
 
-// node_modules/.pnpm/chessground@9.1.1/node_modules/chessground/src/fen.ts
+// node_modules/chessground/src/fen.ts
 var initial = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR";
 var roles = {
   p: "pawn",
@@ -498,7 +498,7 @@ function write(pieces) {
   ).join("/").replace(/1{2,}/g, (s) => s.length.toString());
 }
 
-// node_modules/.pnpm/chessground@9.1.1/node_modules/chessground/src/config.ts
+// node_modules/chessground/src/config.ts
 function applyAnimation(state, config) {
   if (config.animation) {
     deepMerge(state.animation, config.animation);
@@ -554,7 +554,7 @@ function isPlainObject(o) {
   return proto === Object.prototype || proto === null;
 }
 
-// node_modules/.pnpm/chessground@9.1.1/node_modules/chessground/src/anim.ts
+// node_modules/chessground/src/anim.ts
 var anim = (mutation, state) => state.animation.enabled ? animate(mutation, state) : render(mutation, state);
 function render(mutation, state) {
   const result = mutation(state);
@@ -648,7 +648,7 @@ function animate(mutation, state) {
 }
 var easing = (t) => t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1;
 
-// node_modules/.pnpm/chessground@9.1.1/node_modules/chessground/src/draw.ts
+// node_modules/chessground/src/draw.ts
 var brushes = ["green", "red", "blue", "yellow"];
 function start(state, e) {
   if (e.touches && e.touches.length > 1)
@@ -733,7 +733,7 @@ function onChange(drawable) {
     drawable.onChange(drawable.shapes);
 }
 
-// node_modules/.pnpm/chessground@9.1.1/node_modules/chessground/src/drag.ts
+// node_modules/chessground/src/drag.ts
 function start2(s, e) {
   if (!(s.trustAllEvents || e.isTrusted))
     return;
@@ -919,7 +919,7 @@ function pieceElementByKey(s, key) {
   return;
 }
 
-// node_modules/.pnpm/chessground@9.1.1/node_modules/chessground/src/explosion.ts
+// node_modules/chessground/src/explosion.ts
 function explosion(state, keys) {
   state.exploding = { stage: 1, keys };
   state.dom.redraw();
@@ -938,7 +938,7 @@ function setStage(state, stage) {
   }
 }
 
-// node_modules/.pnpm/chessground@9.1.1/node_modules/chessground/src/api.ts
+// node_modules/chessground/src/api.ts
 function start3(state, redrawAll) {
   function toggleOrientation2() {
     toggleOrientation(state);
@@ -1029,7 +1029,7 @@ function start3(state, redrawAll) {
   };
 }
 
-// node_modules/.pnpm/chessground@9.1.1/node_modules/chessground/src/state.ts
+// node_modules/chessground/src/state.ts
 function defaults() {
   return {
     pieces: read(initial),
@@ -1122,7 +1122,7 @@ function defaults() {
   };
 }
 
-// node_modules/.pnpm/chessground@9.1.1/node_modules/chessground/src/svg.ts
+// node_modules/chessground/src/svg.ts
 var hilites = {
   hilitePrimary: { key: "hilitePrimary", color: "#3291ff", opacity: 1, lineWidth: 1 },
   hiliteWhite: { key: "hiliteWhite", color: "#ffffff", opacity: 1, lineWidth: 1 }
@@ -1435,7 +1435,7 @@ function labelCoords(from, to, slots) {
   );
 }
 
-// node_modules/.pnpm/chessground@9.1.1/node_modules/chessground/src/wrap.ts
+// node_modules/chessground/src/wrap.ts
 function renderWrap(element, s) {
   element.innerHTML = "";
   element.classList.add("cg-wrap");
@@ -1513,7 +1513,7 @@ function renderCoords(elems, className) {
   return el;
 }
 
-// node_modules/.pnpm/chessground@9.1.1/node_modules/chessground/src/drop.ts
+// node_modules/chessground/src/drop.ts
 function drop(s, e) {
   if (!s.dropmode.active)
     return;
@@ -1530,7 +1530,7 @@ function drop(s, e) {
   s.dom.redraw();
 }
 
-// node_modules/.pnpm/chessground@9.1.1/node_modules/chessground/src/events.ts
+// node_modules/chessground/src/events.ts
 function bindBoard(s, onResize) {
   const boardEl = s.dom.elements.board;
   if ("ResizeObserver" in window)
@@ -1592,7 +1592,7 @@ var dragOrDraw = (s, withDrag, withDraw) => (e) => {
     withDrag(s, e);
 };
 
-// node_modules/.pnpm/chessground@9.1.1/node_modules/chessground/src/render.ts
+// node_modules/chessground/src/render.ts
 function render2(s) {
   const asWhite = whitePov(s), posToTranslate2 = posToTranslate(s.dom.bounds()), boardEl = s.dom.elements.board, pieces = s.pieces, curAnim = s.animation.current, anims = curAnim ? curAnim.plan.anims : /* @__PURE__ */ new Map(), fadings = curAnim ? curAnim.plan.fadings : /* @__PURE__ */ new Map(), curDrag = s.draggable.current, squares = computeSquareClasses(s), samePieces = /* @__PURE__ */ new Set(), sameSquares = /* @__PURE__ */ new Set(), movedPieces = /* @__PURE__ */ new Map(), movedSquares = /* @__PURE__ */ new Map();
   let k, el, pieceAtKey, elPieceName, anim2, fading, pMvdset, pMvd, sMvdset, sMvd;
@@ -1797,7 +1797,7 @@ function appendValue(map, key, value) {
     map.set(key, [value]);
 }
 
-// node_modules/.pnpm/chessground@9.1.1/node_modules/chessground/src/sync.ts
+// node_modules/chessground/src/sync.ts
 function syncShapes2(shapes, root, renderShape3) {
   const hashesInDom = /* @__PURE__ */ new Map(), toRemove = [];
   for (const sc of shapes)
@@ -1819,7 +1819,7 @@ function syncShapes2(shapes, root, renderShape3) {
   }
 }
 
-// node_modules/.pnpm/chessground@9.1.1/node_modules/chessground/src/autoPieces.ts
+// node_modules/chessground/src/autoPieces.ts
 function render3(state, autoPieceEl) {
   const autoPieces = state.drawable.autoShapes.filter((autoShape) => autoShape.piece);
   const autoPieceShapes = autoPieces.map((s) => {
@@ -1853,7 +1853,7 @@ function renderShape2(state, { shape, hash: hash2 }, bounds) {
 }
 var hash = (autoPiece) => [autoPiece.orig, autoPiece.piece?.role, autoPiece.piece?.color, autoPiece.piece?.scale].join(",");
 
-// node_modules/.pnpm/chessground@9.1.1/node_modules/chessground/src/chessground.ts
+// node_modules/chessground/src/chessground.ts
 function initModule({ el, config }) {
   return Chessground(el, config);
 }

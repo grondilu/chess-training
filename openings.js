@@ -12,6 +12,19 @@ if (typeof localStorage == 'undefined') {
 const DEBUG = false;
 const storage = DEBUG ? sessionStorage : localStorage;
 function log(msg) { if (DEBUG) console.log(msg); }
+function pick(array) { return array[Math.floor(Math.random()*array.length)] }
+
+function fix_wrong_uci(fen, uci_move) {
+	if (uci_move == 'e1h1' || uci_move == 'e1a1' || uci_move == 'e8h8' || uci_move == 'e8a8') {
+		let     chess          = new Chess(fen),
+			possible_moves = chess.moves({ verbose: true });
+		if (uci_move == 'e1h1' && possible_moves.filter(m => m.lan == 'e1g1' && m.isKingsideCastle()).length  > 0) return 'e1g1';
+		if (uci_move == 'e1a1' && possible_moves.filter(m => m.lan == 'e1c1' && m.isQueensideCastle()).length > 0) return 'e1c1';
+		if (uci_move == 'e8h8' && possible_moves.filter(m => m.lan == 'e8g8' && m.isKingsideCastle()).length  > 0) return 'e8g8';
+		if (uci_move == 'e8a8' && possible_moves.filter(m => m.lan == 'e8c8' && m.isQueensideCastle()).length > 0) return 'e8c8';
+	}
+	return uci_move;
+}
 
 const halfMoveRegex = /(?:O-O(?:-O)?|[KQBNR](?:[a-h]|[1-8]|[a-h][1-8])??x?[a-h][1-8]|(?:[a-h]x)?[a-h][1-8](?:=[QBNR])?)\+?!?/g;
 
@@ -44,7 +57,6 @@ function makeMove(board, move) {
 	}
 }
 
-
 class Line {
 	constructor(repertoire, color, moves) {
 		this.repertoire = repertoire;
@@ -58,6 +70,9 @@ class Line {
 		let chess = new Chess();
 		for (let move of this.moves) chess.move(move);
 		return chess.pgn();
+	}
+	extend(moves) {
+		return new Line(this.repertoire, this.color, this.moves.concat(moves));
 	}
 }
 
@@ -112,8 +127,98 @@ Promise.all(
 					.then(lines => new Repertoire(name, color, lines));
 			}
 		}()
-	)
-).then(x => main(x[0].lines.concat(x[1].lines)));
+	).concat([
+		fetch("stockfish-evals.jsonl")
+			.then(x => x.text())
+			.then(text => text.trim().split("\n"))
+			.then(
+				arr  => {
+					let evals = {}
+					for (let x of arr) {
+						let data = JSON.parse(x);
+						evals[data.fen] = data.evals
+					}
+					return evals;
+				}
+			)
+	])
+).then(
+	function (x) {
+		let     lines = x[0].lines.concat(x[1].lines),
+			evals = x[2],
+			extended_lines = [];
+
+		for (let line of lines) {
+			let last_fen = [new Chess(), ...line.moves].reduce((a,b) => { a.move(b); return a; })
+				.fen()
+				.split(' ')
+				.splice(0, 4)
+				.join(' ');
+
+			if (evals[last_fen]) {
+				let deepest_eval = evals[last_fen].reduce((a,b) => a.depth > b.depth ? a : b);
+				if (line.moves.length % 2 == 0) {
+					if (line.color == 'white') {
+						//console.info('Type I');
+						let pv = deepest_eval['pvs'].reduce((a, b) => a.cp > b.cp ? a : b),
+							uci_moves = pv['line'].split(' '),
+							chess = new Chess(last_fen),
+							san_moves = [];
+						for (let uci_move of uci_moves) {
+							let move = chess.move(fix_wrong_uci(chess.fen(), uci_move), { verbose: true });
+							san_moves.push(move.san)
+						}
+						extended_lines.push(line.extend(san_moves));
+					} else {
+						//console.info('Type II');
+						//console.info(`adding ${deepest_eval['pvs'].length} lines`);
+						for (let pv of deepest_eval['pvs']) {
+							let chess = new Chess(last_fen),
+								uci_moves = pv['line'].split(' '),
+								san_moves = [];
+							for (let uci_move of uci_moves) {
+								let move = chess.move(fix_wrong_uci(chess.fen(), uci_move));
+								san_moves.push(move.san);
+							}
+							extended_lines.push(line.extend(san_moves));
+						}
+					}
+				} else {
+					if (line.color == 'white') {
+						//console.info('Type III');
+						//log(line.moves);
+						for (let pv of deepest_eval['pvs']) {
+							let chess = new Chess(last_fen),
+								uci_moves = pv['line'].split(' '),
+								san_moves = [];
+							for (let uci_move of uci_moves) {
+								let move = chess.move(fix_wrong_uci(chess.fen(), uci_move));
+								san_moves.push(move.san);
+							}
+							extended_lines.push(line.extend(san_moves));
+						}
+					} else {
+						//console.info('Type IV');
+						let pv = deepest_eval['pvs'].reduce((a, b) => a.cp < b.cp ? a : b),
+							uci_moves = pv['line'].split(' '),
+							chess = new Chess(last_fen),
+							san_moves = [];
+						for (let uci_move of uci_moves) {
+							let move = chess.move(fix_wrong_uci(chess.fen(), uci_move), { verbose: true });
+							san_moves.push(move.san)
+						}
+						extended_lines.push(line.extend(san_moves));
+					}
+				}
+			} else {
+				console.warn('found one line with no eval at the end');
+				extended_lines.push(line);
+			}
+
+		}
+		return extended_lines;
+	}
+).then(main)
 
 function identifyOpening(compacted_moves) {
 	if (compacted_moves == '') return "starting position"; 
@@ -167,7 +272,7 @@ async function quiz(line) {
 									try {
 										let move = chess.move({ from, to }),
 											expected_move = moves.shift();
-										makeMove(board, move);
+										//makeMove(board, move);
 										// Is the user's move the expected one?
 										if (move.san == expected_move) {
 											log("good move");
@@ -182,7 +287,7 @@ async function quiz(line) {
 											}
 											if (moves.length == 0) {
 												document.getElementById('soundSuccess').play();
-												log("success! stopping board");
+												log("success! locking board");
 												board.stop();
 												resolve(true);
 											}
