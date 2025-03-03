@@ -58,21 +58,29 @@ function makeMove(board, move) {
 }
 
 class Line {
-	constructor(repertoire, color, moves) {
+	constructor(repertoire, color, moves, number_of_extended_moves = 0) {
 		this.repertoire = repertoire;
 		this.color      = color;
 		this.moves = (typeof moves === 'string') ? moves.match(halfMoveRegex) : moves;
+		this.number_of_extended_moves = number_of_extended_moves;
 		if (this.moves.length == 0)
 			throw `could not build line from ${moves}`;
 	}
-	pack() { return `${this.repertoire}/${this.color}/${this.moves.join('')}`; }
+	pack() {
+		return [
+			this.repertoire,
+			this.color,
+			this.moves.join(''),
+			this.number_of_extended_moves
+		].join('/')
+	}
 	pgn() {
 		let chess = new Chess();
 		for (let move of this.moves) chess.move(move);
 		return chess.pgn();
 	}
 	extend(moves) {
-		return new Line(this.repertoire, this.color, this.moves.concat(moves));
+		return new Line(this.repertoire, this.color, this.moves.concat(moves), moves.length);
 	}
 }
 
@@ -81,8 +89,9 @@ function unpack(line) {
 		let     split      = line.split('/'),
 			repertoire = split[0],
 			color      = split[1],
-			moves      = split[2];
-		return new Line(repertoire, color, moves);
+			moves      = split[2],
+			number_of_extended_moves = split[3];
+		return new Line(repertoire, color, moves, number_of_extended_moves);
 	} else { throw "unexpected argument type" }
 }
 
@@ -272,7 +281,7 @@ async function quiz(line) {
 									try {
 										let move = chess.move({ from, to }),
 											expected_move = moves.shift();
-										//makeMove(board, move);
+										makeMove(board, move);
 										// Is the user's move the expected one?
 										if (move.san == expected_move) {
 											log("good move");
@@ -290,7 +299,11 @@ async function quiz(line) {
 												log("success! locking board");
 												board.stop();
 												resolve(true);
+											} else if (moves.length <= line.number_of_extended_moves) {
+												document.querySelector('cg-board').style.backgroundColor = 'lightgrey';
 											}
+
+
 										} else {
 											document.getElementById('soundWrong').play();
 											log(`wrong move: ${expected_move} was expected`);
@@ -317,25 +330,4 @@ async function quiz(line) {
 			);
 		});
 }
-
-/*
-      document.addEventListener(
-	'keydown',
-	e => {
-	  const keyName = e.key;
-	  if (keyName === 'f') {
-	    orientation = orientation == 'white' ? 'black' : 'white';
-	    quiz();
-	  }
-	}
-      );
-      */
-
-/*
-      for (let sanmove of line.match(halfMoveRegex)) {
-	let move = chess.move(sanmove);
-	if (!move) throw "illegal move";
-	board.move(move.from, move.to);
-      }
-      */
 
