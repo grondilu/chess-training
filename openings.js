@@ -58,11 +58,10 @@ function makeMove(board, move) {
 }
 
 class Line {
-	constructor(repertoire, color, moves, number_of_extended_moves = 0) {
+	constructor(repertoire, color, moves) {
 		this.repertoire = repertoire;
 		this.color      = color;
 		this.moves = (typeof moves === 'string') ? moves.match(halfMoveRegex) : moves;
-		this.number_of_extended_moves = number_of_extended_moves;
 		if (this.moves.length == 0)
 			throw `could not build line from ${moves}`;
 	}
@@ -70,17 +69,13 @@ class Line {
 		return [
 			this.repertoire,
 			this.color,
-			this.moves.join(''),
-			this.number_of_extended_moves
+			this.moves.join('')
 		].join('/')
 	}
 	pgn() {
 		let chess = new Chess();
 		for (let move of this.moves) chess.move(move);
 		return chess.pgn();
-	}
-	extend(moves) {
-		return new Line(this.repertoire, this.color, this.moves.concat(moves), moves.length);
 	}
 }
 
@@ -89,9 +84,8 @@ function unpack(line) {
 		let     split      = line.split('/'),
 			repertoire = split[0],
 			color      = split[1],
-			moves      = split[2],
-			number_of_extended_moves = split[3];
-		return new Line(repertoire, color, moves, number_of_extended_moves);
+			moves      = split[2];
+		return new Line(repertoire, color, moves);
 	} else { throw "unexpected argument type" }
 }
 
@@ -136,98 +130,8 @@ Promise.all(
 					.then(lines => new Repertoire(name, color, lines));
 			}
 		}()
-	).concat([
-		fetch("stockfish-evals.jsonl")
-			.then(x => x.text())
-			.then(text => text.trim().split("\n"))
-			.then(
-				arr  => {
-					let evals = {}
-					for (let x of arr) {
-						let data = JSON.parse(x);
-						evals[data.fen] = data.evals
-					}
-					return evals;
-				}
-			)
-	])
-).then(
-	function (x) {
-		let     lines = x[0].lines.concat(x[1].lines),
-			evals = x[2],
-			extended_lines = [];
-
-		for (let line of lines) {
-			let last_fen = [new Chess(), ...line.moves].reduce((a,b) => { a.move(b); return a; })
-				.fen()
-				.split(' ')
-				.splice(0, 4)
-				.join(' ');
-
-			if (evals[last_fen]) {
-				let deepest_eval = evals[last_fen].reduce((a,b) => a.depth > b.depth ? a : b);
-				if (line.moves.length % 2 == 0) {
-					if (line.color == 'white') {
-						//console.info('Type I');
-						let pv = deepest_eval['pvs'].reduce((a, b) => a.cp > b.cp ? a : b),
-							uci_moves = pv['line'].split(' '),
-							chess = new Chess(last_fen),
-							san_moves = [];
-						for (let uci_move of uci_moves) {
-							let move = chess.move(fix_wrong_uci(chess.fen(), uci_move), { verbose: true });
-							san_moves.push(move.san)
-						}
-						extended_lines.push(line.extend(san_moves));
-					} else {
-						//console.info('Type II');
-						//console.info(`adding ${deepest_eval['pvs'].length} lines`);
-						for (let pv of deepest_eval['pvs']) {
-							let chess = new Chess(last_fen),
-								uci_moves = pv['line'].split(' '),
-								san_moves = [];
-							for (let uci_move of uci_moves) {
-								let move = chess.move(fix_wrong_uci(chess.fen(), uci_move));
-								san_moves.push(move.san);
-							}
-							extended_lines.push(line.extend(san_moves));
-						}
-					}
-				} else {
-					if (line.color == 'white') {
-						//console.info('Type III');
-						//log(line.moves);
-						for (let pv of deepest_eval['pvs']) {
-							let chess = new Chess(last_fen),
-								uci_moves = pv['line'].split(' '),
-								san_moves = [];
-							for (let uci_move of uci_moves) {
-								let move = chess.move(fix_wrong_uci(chess.fen(), uci_move));
-								san_moves.push(move.san);
-							}
-							extended_lines.push(line.extend(san_moves));
-						}
-					} else {
-						//console.info('Type IV');
-						let pv = deepest_eval['pvs'].reduce((a, b) => a.cp < b.cp ? a : b),
-							uci_moves = pv['line'].split(' '),
-							chess = new Chess(last_fen),
-							san_moves = [];
-						for (let uci_move of uci_moves) {
-							let move = chess.move(fix_wrong_uci(chess.fen(), uci_move), { verbose: true });
-							san_moves.push(move.san)
-						}
-						extended_lines.push(line.extend(san_moves));
-					}
-				}
-			} else {
-				console.warn('found one line with no eval at the end');
-				extended_lines.push(line);
-			}
-
-		}
-		return extended_lines;
-	}
-).then(main)
+	)
+).then(x => x[0].lines.concat(x[1].lines)).then(main)
 
 function identifyOpening(compacted_moves) {
 	if (compacted_moves == '') return "starting position"; 
@@ -299,10 +203,7 @@ async function quiz(line) {
 												log("success! locking board");
 												board.stop();
 												resolve(true);
-											} else if (moves.length <= line.number_of_extended_moves) {
-												document.querySelector('cg-board').style.backgroundColor = 'lightgrey';
 											}
-
 
 										} else {
 											document.getElementById('soundWrong').play();
