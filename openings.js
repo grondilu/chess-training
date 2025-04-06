@@ -3,6 +3,7 @@ import { Chess, SQUARES  } from './dist/chess.js/dist/esm/chess.js';
 //import { repertoires     } from './repertoires.js';
 import { book            } from './opening-book.js';
 import { SRS             } from './spaced-repetition.js';
+import { zobrist_hash    } from './zobrist.js';
 
 if (typeof localStorage == 'undefined') {
 	alert("web storage is not supported");
