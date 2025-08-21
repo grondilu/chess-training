@@ -1,0 +1,162 @@
+[Event "unknown"]
+[Site "email"]
+[Date "2001.??.??"]
+[Round ""]
+[White "Nikolai Vlasslov"]
+[Black "Willy Iclicki"]
+[Result "1-0"]
+[ECO "B12i"]
+[Book "Jouez 1.e4!"]
+[Partie "I"]
+
+1.e4 c6 2.d4 d5 3.e5 e6 $2 4.Bd3 $1 c5 5.c3 Nc6 6.Nf3 cxd4 ( 6...Qb6 7.O-O
+Bd7 8.dxc5 Bxc5 9.b4 Bf8 10.a3 ) 7.cxd4 Qb6 8.O-O Bd7 9.Nc3 Nxd4 10.Nxd4 
+Qxd4 11.Nb5 $1 Qxe5 12.Re1 Qb8 13.Qf3 $1 {Les blancs ont une initiative 
+fantastique pour les deux pions.  La menace directe est Ff4, après quoi 
+tout s'enchaîne à la vitesse de l'éclair.} 13...Bd6 14.Nxd6+ Qxd6 15.
+Bf4 Qe7 16.Qg3 Qf8 ( 16...f6 17.Rac1 $1 ) 17.Bd6 Ne7 18.Rac1 Bc6 19.b4 $1 
+{Les noirs ont survécu à la première vague de l'attaque, mais sont 
+incapables de survivre à la seconde.} 19...a6 20.a4 g6 21.b5 Bd7 22.Rc7 
+Qg7 23.Bb4 Rd8 24.Qd6 Qf8 25.Rxb7 Nc8 26.Qf4 1-0
+
+[Event "Korchnoi Birthday KO"]
+[Site "Zurich SUI"]
+[Date "2001.04.29"]
+[Round "1.2"]
+[White "Short,N"]
+[Black "Spassky,B"]
+[Result "1-0"]
+[WhiteElo "2676"]
+[BlackElo "2551"]
+[ECO "B12i"]
+
+1.e4 c6 2.d4 d5 3.e5 g6 $6 4.c4 $1 Bg7 5.Nc3 Nh6 ( 5...dxc4 6.Bxc4 Nh6 7.
+Bf4 O-O 8.Qd2 Nf5 9.Nf3 e6 10.Bg5 $1 $146 f6 ( 10...Qc7 11.g4 Ne7 12.Ne4 
+Nd5 13.h4 ) 11.exf6 Bxf6 12.Bxf6 Qxf6 13.Ne4 Qe7 14.h4 $1 ) 6.h3 $5 O-O 7.
+Nf3 f6 8.Be2 $6 ( 8.exf6 exf6 9.Be2 ) 8...Nf7 ( 8...fxe5 9.Nxe5 e6 ) 9.
+exf6 exf6 10.O-O Be6 11.Qb3 $14 Qd7 12.Re1 Nd6 13.c5 Nf5 14.Bf4 g5 15.Bh2 
+h5 16.Bd3 g4 17.hxg4 hxg4 18.Bxf5 Bxf5 19.Nh4 Bh7 20.Bd6 Rf7 21.Re2 Na6 
+22.Rae1 Bf8 23.Bxf8 Raxf8 24.g3 b6 25.cxb6 Qb7 26.Qd1 axb6 27.Re6 Rg7 28.
+a3 Qd7 29.R6e3 Nc7 30.Qb3 b5 31.Qb4 Re8 32.a4 Rxe3 33.Rxe3 Ne6 34.axb5 c5 
+35.dxc5 d4 36.c6 Qc8 37.Rxe6 Qxe6 38.Qxd4 Re7 39.c7 Kf7 40.b6 Rd7 41.Qe3 
+Qc6 42.Qh6 Kg8 43.Ng6 Rf7 44.Nd5 1-0
+
+[Event ""]
+[Site "Sitges"]
+[Date "2000.??.??"]
+[Round ""]
+[White "Viktor Vehi Bach"]
+[Black "Daniel Montoya Cale"]
+[Result "1-0"]
+[ECO "B12i"]
+
+1.e4 c6 2.d4 d5 3.e5 Na6 {L'un des attraits de ce coup est que les blancs 
+ne peuvent pas prendre le Cavalier à cause de l'astuce ...Da5† ; mais 
+les blancs ont de toute façon mieux à faire.} 4.c3 $1 Nc7 ( 4...Bf5 5.
+Ne2 Nc7 ( 5...e6 6.Nf4 $1 Ne7 7.Nd2 Nc7 8.g4 Bg6 9.h4 f6 10.Nxg6 hxg6 11.
+Nf3 Qd7 12.Be3 $1 $146 O-O-O 13.Qc2 $16 {Préparant le grand roque tout en
+rendant la rupture ...c5 difficile.} ) 6.Nd2 $1 $146 g6 ( 6...e6 7.Nf4 Ne7
+{transpose dans la ligne 5...e6} ) 7.Ng3 $1 Be6 8.Bd3 ) 5.Bd3 g6 6.Ne2 Nh6
+7.h4 $1 Bf5 8.Bxf5 Nxf5 9.h5 {Pose une question déplaisante aux Noirs.} 
+9...Rg8 ( 9...Bg7 $2 10.h6 $1 Bf8 11.g4 ) 10.hxg6 $201 Rxg6 $2 ( 10...hxg6
+11.Nd2 Qd7 12.Nf3 O-O-O 13.Qd3 ) 11.Nf4 Rh6 12.Nh5 Rg6 13.g4 Nh6 14.f3 $16
+Ne6 15.Be3 Ng5 16.Nd2 Qd7 17.Qe2 O-O-O 18.O-O-O $201 f5 19.exf6 exf6 20.
+Nxf6 Qe7 21.Nh5 Re8 22.Rde1 Re6 23.Bxg5 Qxg5 24.Qxe6+ Rxe6 25.Rxe6 Kd7 26.
+Rhe1 Bd6 $2 27.Nf6+ 1-0
+
+[Event ""]
+[Site "Charleville"]
+[Date "2000.??.??"]
+[Round ""]
+[White "Jean-Marc Degraeve"]
+[Black "Harald Pingitzer"]
+[Result "1-0"]
+[ECO "B12i"]
+
+1.e4 c6 2.d4 d5 3.e5 Na6 4.c3 Nc7 5.Bd3 g6 6.Ne2 h5 $201 7.Nd2 $1 Nh6 8.
+Nf1 {On pourrait s'arrêter là et dire que les Blancs sont mieux : ils 
+ont un avantage d'espace et un plan d'action clair.  Les Noirs n'ont pas 
+de contre-jeu actif et devront patienter pour voir comment la situation 
+évolue.  Mais ils doivent tout d'abord trouver un coup, ce qui n'est pas 
+simple.} 8...b6 ( 8...h4 9.Ne3 h3 10.g3 Bg7 11.O-O Kf8 12.Nf4 $1 Ne6 13.
+Qf3 Kg8 14.g4 Nxf4 15.Qxf4 Qd7 16.f3 {Les Blancs étaient complètement 
+gagnants dans la partie Häusler – Muharemagić, email 2004.  Ils ont 
+joué Dg3 mais n'ont jamais tenté de prendre le pion h tat percer au 
+centre était plaisant.} ) ( 8...Bf5 9.Bxh6 Rxh6 10.Bxf5 gxf5 $14 {Tout 
+bien pesé, c'est sans doute ce que les Noirs peuvent tirer de mieux de 
+cette variante, même si ce n'est pas grand chose.  Ils ont une structure 
+de pions plus faible et des pièces plus passives.  Plus important encore,
+ils n'ont aucun levier de pion disponible dans un avenir prévisible.  En 
+résumé, les Blancs ont toutes les raisons d'être satisfaits.} ) 9.Ne3 
+Bg7 ( 9...Ng4 10.Nc2 c5 11.b3 ) 10.Qc2 Be6 11.Nf4 Qd7 12.a4 O-O $201 13.h3
+$1 c5 14.g4 hxg4 15.hxg4 Nxg4 ( 15...Bxg4 16.Rg1 $1 Be6 17.Bxg6 fxg6 18.
+Qxg6 Rf7 19.Qxh6 ) 16.f3 $1 Nxe3 17.Bxe3 Bf5 18.Qh2 g5 19.Bxf5 $6 ( 19.e6 
+$1 fxe6 20.Ng6 ) 19...Qxf5 20.Nh5 f6 21.exf6 Bxf6 22.O-O-O ( 22.Nxf6+ $1 
+exf6 $4 23.Qxc7 ) 22...Ne6 23.Nxf6+ exf6 24.dxc5 Ng7 $6 ( 24...bxc5 $2 25.
+Rxd5 $1 ) 25.c6 Qe6 26.Rde1 Qxc6 27.Bxg5 $1 Rae8 28.Qh7+ Kf7 29.Bh6 Rxe1+ 
+30.Rxe1 Rg8 31.Rg1 Qxa4 32.Kb1 Qc4 33.Bxg7 1-0
+
+[Event ""]
+[Site "Kecskemét"]
+[Date "2009.??.??"]
+[Round ""]
+[White "Klára Varga"]
+[Black "Gabriel Battigliani"]
+[Result "1/2-1/2"]
+
+1.e4 c6 2.d4 d5 3.e5 c5 4.dxc5 e6 5.a3 a5 $6 6.Be3 $1 {Le coup le plus 
+ambitieux, qui complique la tâche des Noirs pour regagner le pion.} 6...
+Nh6 {Une idée standard après 5.Fe3, mais les coups de pion additionnels 
+changent beaucoup la situation.} ( 6...Nd7 $5 $146 7.Nc3 Nxe5 ( 7...Bxc5 
+8.Bxc5 Nxc5 { [%draw arrow,c3,b5,green] [%draw arrow,d1,g4,green]} ) 8.Na4
+$1 $14 { [%draw arrow,g1,f3,green] [%draw arrow,f1,b5,green] [%draw 
+arrow,e1,g1,green] [%draw arrow,b2,b4,green] [%draw arrow,d2,c4,green]} ) 
+7.Nf3 Qc7 $6 ( 7...Nf5 8.Bg5 $1 $146 Qc7 $201 ( 8...Be7 9.Bxe7 Qxe7 10.Bd3
+Qxc5 11.Bxf5 exf5 12.Nc3 Be6 13.Qd4 $16 ) ( 8...f6 $6 9.exf6 gxf6 10.Ne5 
+$1 {Une astuce bien connue.} ) 9.Nc3 $1 {Grâce à la possibilité Cb5, 
+les Blancs tirent pleinement parti de la faiblesse de la case b5.} 9...
+Bxc5 10.Bd3 Ne7 11.Nb5 Qb6 12.O-O O-O ) 8.Nc3 $1 {L'idée standard : viser
+les cases noires en exploitant le trou en b5.} 8...Bxc5 9.Nb5 Qe7 10.Bxc5 
+Qxc5 11.Nd6+ Kf8 12.Bd3 {L'ouverture est finie et les blancs ont un clair 
+avantage.} 1/2-1/2
+
+[Event ""]
+[Site "Evpatoria"]
+[Date "2008.??.??"]
+[Round ""]
+[White "Igor Smirnov"]
+[Black "Evgeny Sharapov"]
+[Result "1-0"]
+
+1.e4 c6 2.d4 d5 3.e5 c5 4.dxc5 e6 5.a3 Nc6 6.Nf3 {Les Blancs se 
+développent de façon naturelle.} 6...Bxc5 ( 6...f6 7.exf6 $1 Nxf6 ( 7...
+Qxf6 $146 8.c4 Bxc5 9.cxd5 exd5 10.Nc3 $14 ) 8.b4 Be7 {Cette position a 
+été testée dans une série de partie disputées entre ordinateurs — 
+plus quelques parties sur Internet, ce qui revient presque au même.} ( 
+8...a5 $6 9.b5 Nb8 10.Be3 Nbd7 11.c6 Nc5 12.c4 $16 ) ) 7.b4 Bb6 8.Bb2 Nge7
+( 8...f6 9.Bd3 fxe5 10.O-O $1 $201 Nf6 11.Nxe5 O-O 12.Nd2 $14 ) 9.Bd3 Ng6 
+10.O-O $201 Nf4 {Les Noirs effectuent un troisième coup avec le cavalier 
+et s'apprêtent à en jouer un quatrième pour s'assurer l'avantage de la 
+paire de Fous.  Mais constitue-t-elle vraiment un avantage ici?} 11.c4 $1 
+{Les Blancs fraient un chemin vers e4 pour leur Cavalier.} 11...Nxd3 ( 
+11...g5 $5 12.c5 Bc7 13.b5 Ne7 14.Nxg5 Rg8 15.Nxf7 $1 Kxf7 16.Qf3 Rxg2+ 
+17.Kh1 Ng6 18.Bxg6+ Rxg6 19.Qxf4+ $14 ) ( 11...dxc4 12.Bxc4 Qxd1 13.Rxd1 
+Ng6 14.Nbd2 Bc7 15.Rac1 $1 $146 O-O {Le pion est imprenable tant que Fb5+ 
+est possible.} 16.Be2 $1 Bxe5 ( 16...Ngxe5 $2 17.b5 $18 ) 17.Nxe5 Ncxe5 
+18.g3 $1 $16 {Les Blancs ont un contrôle total sur la position et leurs 
+pièces s'en donneront à cœur joie après f2-f4, Ff3 et Ce4-d6.} ) ( 
+11...Bc7 12.Qd2 Nxd3 13.Qxd3 a6 14.Re1 O-O 15.Nc3 d4 16.Ne4 Nxe5 17.Nxe5 
+Bxe5 18.Rad1 $14 Bc7 19.Bxd4 e5 20.Bc5 Qxd3 21.Rxd3 f5 22.Nc3 e4 23.Rdd1 
+Rf7 24.f3 Be6 25.Nd5 Bxd5 26.cxd5 $16 ) ( 11...a6 12.Nc3 Bc7 13.Re1 $1 
+$146 O-O 14.Qc2 Nxd3 15.Qxd3 ) ( 11...f6 12.exf6 gxf6 13.Nc3 $14 dxc4 14.
+Bxc4 Qxd1 15.Raxd1 e5 16.Ne4 Ke7 17.b5 Na5 18.Ba2 Be6 19.Bxe6 Nxe6 $201 
+20.Nxf6 $1 Kxf6 21.Bxe5+ Ke7 22.Bxh8 Rxh8 23.Rfe1 ) ( 11...O-O 12.Bc2 $5 
+$146 dxc4 13.Nbd2 Nd3 14.Nxc4 Nxb2 15.Nxb2 Qxd1 16.Rfxd1 $14 ) 12.Qxd3 
+$201 dxc4 ( 12...Ne7 13.Nc3 Bd7 14.Rfd1 dxc4 15.Qxc4 Ng6 16.Qg4 $16 f5 $2 
+17.exf6 Qxf6 18.Rxd7 $1 Kxd7 19.Rd1+ $20 ) 13.Qxc4 O-O 14.Nc3 Nd4 ( 14...
+Ne7 15.Rad1 Nd5 16.Qg4 $1 ) 15.Nxd4 Qxd4 16.Qe2 Qh4 17.Rad1 $14 {Les Noirs
+ont du mal à mettre leurs pièces en jeu.  Il est clair que la paire de 
+Fous n'est ici pas une force.} 17...Rd8 ( 17...f5 $6 18.exf6 Rxf6 $6 19.
+Na4 $1 $146 Rf7 20.Nxb6 axb6 21.Rd4 Qe7 22.Rfd1 ) 18.Rxd8+ Bxd8 $6 ( 18...
+Qxd8 19.Ne4 ) 19.Rd1 h6 20.Ne4 b6 21.g3 Qe7 22.Nf6+ Kh8 23.Qe4 1-0
+

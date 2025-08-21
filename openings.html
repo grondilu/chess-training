@@ -10,27 +10,50 @@
     <link rel="stylesheet" type="text/css" href="assets/chessground.brown.css" />
     <link rel="stylesheet" type="text/css" href="assets/chessground.cburnett.css" />
     <style>
-      /*
+      /* Default styles */
       body {
-        display: flex;
-        flex-wrap: wrap;
+	background-color: #ffffff; /* Default light background */
+	display: flex;
+	flex-wrap: wrap;
       }
-      */
 
       body > div {
-        margin: 10px;
+	margin: 10px;
       }
 
       .chessground {
-        width: min(90vw, 90vh);
+	width: min(90vw, 90vh);
 	height: min(90vw, 90vh);
       }
 
       cg-board {
-        background-color: #bfcfdd;
+	background-color: #bfcfdd; /* Default chessboard background */
+      }
+
+      /* Dark mode */
+      @media (prefers-color-scheme: dark) {
+	body {
+	  background-color: #1a1a1a; /* Dark background for body */
+	}
+
+	cg-board {
+	  background-color: #3c4b5a; /* Darker chessboard background */
+	}
+      }
+
+      /* Light mode */
+      @media (prefers-color-scheme: light) {
+	body {
+	  background-color: #ffffff; /* Light background for body */
+	}
+
+	cg-board {
+	  background-color: #bfcfdd; /* Light chessboard background */
+	}
       }
     </style>
 
+    <script src="https://unpkg.com/pgn-parser@2.2.1/dist/pgn-parser.js"></script>
     <script type="module" src="openings.js"></script>
   </head>
   <body>
