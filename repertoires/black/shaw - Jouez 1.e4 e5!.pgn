@@ -1,0 +1,74 @@
+[Event ""]
+[Site ""]
+[Date "????.??.??"]
+[Round ""]
+[White ""]
+[Black ""]
+[Result "*"]
+[Annotator "Ntirlis, N"]
+
+1.e4 e5 2.Bb5 $6 {En optant pour ce coup, les Blancs abandonnent déjà 
+tout espoir d'obtenir le moindre avantage d'ouverture.} 2...Nf6 3.d4 ( 3.
+Nc3 c6 4.Ba4 b5 5.Bb3 b4 6.Na4 Nxe4 {Damaso — Tisdall, Manille (ol) 
+1992.  Avec ...d5 qui arrive bientôt, les Blancs n'ont aucune 
+compensation.} ) 3...c6 4.dxe5 ( 4.Ba4 $2 Nxe4 5.dxe5 Nxf2 $5 $17 {Lima 
+— Cordovil, Portugal 1992.} ( 5...Bc5 $1 $146 6.Nh3 d5 $1 ) ) 4...Nxe4 
+5.Bd3 ( 5.Qe2 Qa5+ 6.c3 Nxf2 {Camejo Almeida — Izeta Txabarri, Andorre 
+1987.} ) ( 5.Be2 Bc5 ) 5...Nc5 6.Nf3 d5 $201 7.O-O ( 7.exd6 Bxd6 {procure 
+une partie facile aux Noirs.  Les Blancs vont soit devoir céder leur 
+paire de Fous, soit perdre du temps en bougeant leur Fou d3, donnant ainsi
+une avance de développement aux Noirs.} ) 7...Be7 8.h3 O-O 9.Nc3 Nbd7 10.
+Ne2 f6 $1 {Les Noirs détenaient déjà un avantage palpable et ils se 
+sont imposés dans Rocha — Almási, Tromsø (ol) 2014.} *
+
+[Event ""]
+[Site ""]
+[Date "????.??.??"]
+[Round ""]
+[White ""]
+[Black ""]
+[Result "*"]
+
+1.e4 e5 2.Qh5 $6 $201 Nc6 3.Bc4 {menaçant le mat du Berger.} 3...g6 $1 4.
+Qf3 Nf6 5.Ne2 ( 5.Qb3 $2 Nd4 $1 6.Bxf7+ Ke7 7.Qc4 b5 $1 {Les Blancs 
+perdent leur Fou.} ) 5...Bg7 6.d3 ( 6.Nbc3 d6 7.d3 Na5 ) 6...d6 7.h3 ( 7.
+O-O Na5 ) 7...Na5 8.Nbc3 ( 8.Bb5+ c6 9.Ba4 b5 10.Bb3 O-O $15 ) 8...O-O 
+$146 9.O-O Nxc4 10.dxc4 $201 {La position ressemble à une partie 
+Viennoise où les Noirs ont gagné du temps pour placer leur Fou en 
+Fianchetto.} 10...Nd7 $1 $15 {Les Noirs projettent de placer leur autre 
+Fou en Fianchetto puis de jouer ...f5} *
+
+[Event ""]
+[Site ""]
+[Date "????.??.??"]
+[Round ""]
+[White ""]
+[Black ""]
+[Result "*"]
+
+1.e4 e5 2.Nf3 Nc6 3.c3 {La Ponziani est une ouverture rare à tous les 
+niveaux ; ni moi-même ni aucun de mes étudiants n'y avons encore été 
+confrontés.  Malgré cela, Magnus Carlsen l'a essayé une fois, tout 
+comme mon ami et collègue Jacob Aagaard.} 3...Nf6 4.d4 Nxe4 5.d5 Bc5 $1 
+$201 {Les Noirs sacrifient une pièce pour deux pions et d'excellentes 
+chances d'attaque contre le Roi blanc exposé.} 6.dxc6 Bxf2+ 7.Ke2 Bb6 $1 
+8.Qd5 ( 8.Be3 $2 bxc6 9.Bxb6 axb6 10.Nbd2 Nf6 11.Kf2 Qe7 12.b4 e4 $19 {
+Krabbe — De Rooi, Amsterdam 1964} ) 8...Nf2 $1 9.Rg1 ( 9.Bg5 $2 f6 10.
+Nxe5 Qe7 $19 {Soderberg — Engman, Suède 2010} ) ( 9.Qxe5+ Kf8 10.Rg1 {
+Bosch — Lombaers, Wijchen 2014} 10...Ng4 $1 $146 {suivi de ...dxc6, 
+protégeant le Cavalier et attaquant g1.} ) ( 9.cxb7 Bxb7 10.Qxb7 Nxh1 11.
+Be3 Bxe3 12.Kxe3 O-O {Csapó — Rachela, Hongrie 2008.  Le Roi blanc est 
+extrèmement exposé} ) 9...O-O $1 10.cxb7 Bxb7 11.Qxb7 Qf6 {Bien que les 
+Noirs aient temporairement deux pièces de moins, ce sont les Blancs qui 
+doivent lutter pour leur survie !} 12.Qd5 $201 ( 12.Qa6 e4 $1 $146 13.Nd4 
+c5 14.Nc2 d5 $17 ) ( 12.Na3 $146 e4 13.Nc4 Rab8 14.Qd5 exf3+ 15.gxf3 Rfe8+
+16.Kd2 Ne4+ 17.fxe4 Bxg1 ) 12...c6 13.Qd2 e4 14.Nd4 e3 15.Qc2 Rae8 16.Nf3 
+( 16.Bxe3 $4 Rxe3+ $21 ) 16...Re6 17.a4 a5 18.Na3 d5 19.Rb1 {sniper — 
+gaga, Internet 2014} 19...Rfe8 $146 {Mon analyse conclut que les Chances 
+des noirs son supérieures, même si la position demeure bien entendu 
+compliquée.} 20.b4 ( 20.g3 c5 21.Rg2 c4 22.Rg1 g5 23.Bg2 g4 24.Nd4 Nd3 
+$15 ) ( 20.g4 Ne4 ) 20...Ne4 21.Bb2 Nd2 22.Re1 Qf4 $15 {Hormis l'évident 
+...axb4, les idées noires comportent également ...g4-g5 ou Dg4, 
+menaçant ...Cxf3.  Les Blancs vont devoir rendre du matériel pour 
+survivre.} *
+
