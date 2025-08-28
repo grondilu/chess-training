@@ -118,50 +118,20 @@ function makeMove(board, move) {
     }
 }
 
-class Line {
-    constructor(moves, color, start = undefined) {
-	this.moves = (typeof moves === 'string') ? moves.match(halfMoveRegex) : moves;
-	this.start = start;
-	this.color = color;
-
-	if (this.moves.length == 0)
-	    throw `could not build line from ${moves}`;
-    }
-    pack() {
-	return [
-	    this.start,
-	    this.color === white ? 'w' : 'b',
-	    this.moves.join('')
-	].join('§')
-    }
-    pgn() {
-	let chess = new Chess(),
-	    moves = [];
-	if (this.start)
-	    for (let move of STANDARD_MOVE_ORDERS[OPENING_ASSUMPTIONS[this.start]].match(halfMoveRegex))
-		chess.move(move);
-	for (let move of this.moves) chess.move(move);
-	return chess.pgn();
-    }
+function pack({ header, moves, color }) {
+    return [
+	"FEN" in header ? header.FEN : '',
+	color === white ? 'w' : 'b',
+	moves.map(move => move.move).join('')
+    ].join('§');
 }
 
-function unpack(line) {
-	if (typeof line === 'string') {
-		let     split      = line.split('§'),
-			start      = split[0],
-			color      = split[1] === 'w' ? white : black,
-			moves      = split[2];
-		return new Line(moves, color, start == '' ? undefined : start);
-	} else { throw "unexpected argument type" }
-}
-
-var lines = [];
+var lines = {};
 
 async function main() {
 
-    console.log(`loading ${lines.length} lines`);
-    console.log(lines);
-    let srs     = new SRS(storage, lines.map(x => x.pack()));
+    log(lines);
+    let srs     = new SRS(storage, Object.keys(lines));
 
     while (true) {
 	for (let div of ['info', 'pgn']) {
@@ -178,11 +148,11 @@ async function main() {
 	    break;
 	}
 
-	let line    = unpack(pick),
+	let line    = lines[pick],
 	    success = await quiz(line);
 
-	if (success) { srs.pass(line.pack()); }
-	else         { srs.fail(line.pack()); }
+	if (success) { srs.pass(pick); }
+	else         { srs.fail(pick); }
 
 	document.getElementById("stats").innerHTML = Array.from(srs.stats.values()).join('/');
     }
@@ -194,6 +164,7 @@ Promise.all(
 	for (
 	    let pgn of [
 		"./repertoires/white/Caro-Kann/Shaw/Jouez 1.e4!/I.pgn",
+		"./repertoires/black/shaw - Jouez 1.e4 e5!.pgn",
 		"./repertoires/black/Nimzo-Indian/Swiercz/I/chapter-1.pgn",
 	    ]
 	) {
@@ -207,14 +178,9 @@ Promise.all(
 			    let header          = Object.fromEntries(game.headers.map($ => [$.name, $.value])),
 				extracted_lines = extractLines(game, color);
 			    for (let moves of extracted_lines) {
-				let start = header.FEN;
-				lines.push(
-				    new Line(
-					moves.map($ => $.move.replace(/[?!]/g, '')),
-					color,
-					header.FEN
-				    )
-				);
+				let start = header.FEN,
+				    line = { header, moves, color };
+				lines[pack(line)] = line;
 			    };
 			}
 		    }
@@ -239,27 +205,43 @@ function identifyOpening(compacted_moves) {
 async function quiz(line) {
     console.log(line);
     let chess = new Chess(),
+	header = line.header,
 	color = line.color,
-	orientation  = getColor(color) === white ? 'white' : 'black',
+	orientation  = color === white ? 'white' : 'black',
 	moves = [...line.moves], // for cloning
 	board = Chessground(document.getElementById('chessboard'), {});
 
-    if (line.start) {
-	chess.load(line.start);
-	board.set({ fen: line.start });
+    /* example for drawing arrows
+    board.set({
+	drawable: {
+	    shapes: [
+		{
+		    orig:  "e2",
+		    dest:  "e4",
+		    brush: "blue"
+		}
+	    ]
+	}
+    });
+    */
+
+    if ("FEN" in header) {
+	chess.load(header.FEN);
+	board.set({ fen: header.FEN });
     }
 
-    log([line, color, orientation, getColor(chess.turn())]);
-    if (getColor(color) !== getColor(chess.turn())) {
+    log({ line, color, orientation, turn: getColor(chess.turn())});
+    if (color !== getColor(chess.turn())) {
+	log("making first move");
 	// make first move
 	if (moves.length > 0) {
-	    let move = chess.move(moves.shift());
+	    let move = chess.move(moves.shift().move);
 	    //board.move(move.from, move.to);
 	    makeMove(board, move);
 	    //document.getElementById('soundMove').play();
 	}
     } else {
-	log({ color: getColor(color), turn: chess.turn() });
+	log({ color, turn: getColor(chess.turn()) });
 	log({ fen: line.start, newturn: getColor(chess.turn()) });
     }
 
@@ -292,15 +274,25 @@ async function quiz(line) {
 				    try {
 					let move = chess.move({ from, to }),
 					    expected_move = moves.shift();
-					log(["chosen move is :", move.san]);
+					log({"chosen move": move.san, expected_move});
 					makeMove(board, move);
+					if (expected_move.comments.length > 0)
+					    for (let comment of expected_move.comments) {
+						console.log(comment);
+						if ("text" in comment)
+						    chess.setComment(comment.text);
+						if ("commands" in comment) 
+						    for (let command of comment.commands)
+							if ("key" in command && command.key == "draw")
+							    console.log(command.value);
+					    }
 					// Is the user's move the expected one?
-					if (move.san == expected_move) {
+					if (move.san == expected_move.move.replaceAll(/[!?]*/g, '')) {
 					    log("good move");
 					    //   - shift moves
 					    //   - make next half-move if defined
 					    if (moves.length > 0) {
-						let nextmove = chess.move(moves.shift());
+						let nextmove = chess.move(moves.shift().move);
 						//board.move(nextmove.from, nextmove.to);
 						makeMove(board, nextmove);
 						board.set({ movable: { dests: toDests(chess) } });
@@ -315,12 +307,13 @@ async function quiz(line) {
 					}
 					else {
 					    document.getElementById('soundWrong').play();
-					    log(`wrong move: ${expected_move} was expected`);
+					    log(`wrong move: ${expected_move.move} was expected`);
 					    chess.undo();
 					    board.set({ fen: chess.fen() });
-					    let move = chess.move(expected_move);
+					    let move = chess.move(expected_move.move);
 					    //board.move(move.from, move.to);
 					    makeMove(board, move);
+					    console.log(`http://lichess.org/analysis/pgn/${chess.history().join('_')}`, "_blank");
 					    board.stop();
 					    log("sleeping 1s");
 					    await sleep(PENALITY_DELAY)

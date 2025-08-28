@@ -160,3 +160,79 @@ Fous n'est ici pas une force.} 17...Rd8 ( 17...f5 $6 18.exf6 Rxf6 $6 19.
 Na4 $1 $146 Rf7 20.Nxb6 axb6 21.Rd4 Qe7 22.Rfd1 ) 18.Rxd8+ Bxd8 $6 ( 18...
 Qxd8 19.Ne4 ) 19.Rd1 h6 20.Ne4 b6 21.g3 Qe7 22.Nf6+ Kh8 23.Qe4 1-0
 
+[Event ""]
+[Site ""]
+[Date "????.??.??"]
+[Round ""]
+[White "Ian Nepomniachtchi"]
+[Black "Dmitry Andreikin"]
+[Result "1-0"]
+[Annotator "John Shaw"]
+
+1.e4 c6 2.d4 d5 3.e5 c5 4.dxc5 e6 5.a3 Nc6 6.Nf3 Bxc5 7.b4 Bb6 8.Bb2 Nge7 
+9.Bd3 Ng6 10.O-O O-O 11.Re1 {Les Blancs surprotègent le précieux pion e5
+tout en procurant une case de retraite au Fou d3.} 11...a5 ( 11...Bd7 12.
+Nbd2 Nce7 $201 ( 12...Nf4 $6 13.Bf1 Ne7 14.g3 Nfg6 {Świercz — Khenkin, 
+Varsovie 2013} 15.c4 $1 $146 dxc4 16.Nxc4 $14 ) 13.g3 $1 Ba4 14.Qe2 $1 Qd7
+15.c4 {Les Noirs sont loins de pouvoir égaliser, comme l'a démontré la 
+partie d'ordinateur Lenda — Moebius band, 2013} ) 12.b5 Nce7 13.a4 $201 
+Bc5 $6 ( 13...f6 $5 $146 14.exf6 gxf6 15.c4 Nf4 ( 15...e5 16.cxd5 Nxd5 17.
+Bc4 ) 16.Bf1 e5 ) 14.Nbd2 Qb6 15.Rf1 {La retraite n'est que temporaire.} 
+15...Qc7 16.Nb3 b6 17.Re1 $18 {Les Noirs ne sont pas parvenus à obtenir 
+de contre-jeu.} 17...Bb4 18.c3 Bc5 19.Rc1 Bb7 20.Nbd4 $1 {La Tour n'est 
+sur la colonne c que pour des raisons prophylactiques ; les Blancs ne sont
+pas pressés de jouer c3-c4.} 20...Rae8 21.Rc2 Nf4 22.Bf1 Nf5 $201 {
+Andreikin essaye de tenter les Blancs de doubler leurs pions, ce qui 
+aiderait les pièces noires à vivre un peu, mais Nepo ne veut rien 
+entendre.} 23.Bc1 Ng6 24.Bd3 Bc8 25.g3 $1 h6 26.h4 Qd8 27.h5 Nge7 $201 {Il
+y a maintenant un coup gagnant qui vient de nulle part.} 28.Nb3 $1 {Aussi 
+incroyable que cela puisse paraître, la position des Noirs est si 
+embouteillée qu'ils n'ont aucune défense contre g3-g4 gagnant une pièce
+!} 28...Nxg3 29.Nxc5 Nxh5 30.Nh2 bxc5 31.Qxh5 c4 32.Bf1 Nf5 33.Ba3 d4 34.
+Bg2 d3 35.Rd2 Ne7 36.Qg4 1-0
+
+[Event ""]
+[Site ""]
+[Date "????.??.??"]
+[Round ""]
+[White "Christian Gabriel"]
+[Black "Arnd Lauber"]
+[Result "1-0"]
+[Annotator "Shaw, J"]
+
+1.e4 c6 2.d4 d5 3.e5 c5 4.dxc5 e6 5.a3 Nc6 6.Nf3 Bxc5 7.b4 Bb6 8.Bb2 Nge7 
+9.Bd3 Ng6 10.O-O O-O 11.Re1 {L'ordre des coups a été modifié jusqu'ici.
+} 11...f6 $1 $201 12.exf6 gxf6 13.c4 dxc4 $6 14.Bxc4 Qxd1 15.Rxd1 Kf7 $6 (
+15...Nge5 $6 16.Nxe5 Nxe5 17.Bb3 $16 Bd7 18.Rxd7 $1 ) ( 15...Kh8 16.Nc3 
+$146 e5 17.g3 Bg4 18.Be2 Rfd8 19.Na4 $14 ) 16.Nc3 Ke7 17.b5 $1 $16 $201 {
+Les Blancs comptent placer leur Fou en a3 pour montrer aux Noirs pourquoi 
+il ne fallait pas centraliser leur Roi.} 17...Na5 $6 ( 17...Nce5 18.Nxe5 
+Nxe5 19.Be2 Rd8 20.a4 ) 18.Ba2 Rd8 19.Ne4 e5 20.a4 Be6 21.Ba3+ Kf7 22.
+Nfg5+ {Cette combinaison simple empoche un pion tout en maintenant une 
+position dominante.} 22...fxg5 23.Nxg5+ Kf6 24.Nxe6 Rxd1+ 25.Rxd1 Rc8 26.
+Rc1 Re8 27.Nc7 1-0
+
+[Event ""]
+[Site ""]
+[Date "????.??.??"]
+[Round ""]
+[White ""]
+[Black ""]
+[Result "*"]
+[Line "13...Cf4 14.Ff1"]
+[Annotator "Shaw, J"]
+
+1.e4 c6 2.d4 d5 3.e5 c5 4.dxc5 e6 5.a3 Nc6 6.Nf3 Bxc5 7.b4 Bb6 8.Bb2 Nge7 
+9.Bd3 Ng6 10.O-O O-O 11.Re1 f6 $1 12.exf6 gxf6 13.c4 Nf4 $1 14.Bf1 dxc4 ( 
+14...e5 15.Bc1 dxc4 16.Bxf4 Qxd1 17.Bxc4+ Kg7 18.Rxd1 exf4 19.Nc3 Bg4 20.
+Nd5 ( 20.Bd5 Rfd8 21.Ne2 Bc7 22.Rac1 Rac8 23.h3 Bxf3 24.Bxf3 Be5 25.Kf1 
+Ne7 ) ) 15.Bxc4 $1 Qxd1 16.Rxd1 Kg7 $201 17.Bc1 $1 Nd5 $5 {C'est le choix 
+des moteurs de jeu.} ( 17...Ng6 18.Nc3 {Les Blancs ont une meilleure 
+structure et peuvent accentuer la pression sur les Noirs par Ca4 suivi de 
+Cxb6 ou, si le Fou bouge, Cc5.} ) 18.Bxd5 exd5 19.Rxd5 Re8 $1 $146 $201 {
+Une tentative logique d'obtenir assez d'activité pour compenser le pion 
+sacrifié.} ( 19...Be6 20.Rd6 Bf5 21.Bb2 Rad8 22.Rxd8 Rxd8 23.Nbd2 $14 {
+AmOs 4EvEr — Xromosoma, ordinateurs 2014} ) 20.Bb2 $1 Re2 21.Rd2 Bxf2+ 
+22.Kf1 Rxd2 23.Nbxd2 Bb6 24.Ne4 $14 {Les Noirs sont parvenus à regagner 
+le pion mais en réalité ils doivent l'offrir à nouveau.} *
+
