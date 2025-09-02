@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAIAAACQkWg2AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAYSURBVDhPY2AYBaNgFIyCUTAKRsEoGAWjYBSMggEAO8F6TwAAAABJRU5ErkJggg==">
+    <title>Card Stacks with Canvas</title>
+    <link rel="stylesheet" type="text/css" href="assets/chessground.base.css" />
+    <link rel="stylesheet" type="text/css" href="assets/chessground.brown.css" />
+    <link rel="stylesheet" type="text/css" href="assets/chessground.cburnett.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+            user-select: none;
+            display: flex;
+            flex-direction: row;
+        }
+        .stack {
+            width: 100px;
+            height: 150px;
+            border: 2px dashed #666;
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            background-color: #e0e0e0;
+            cursor: pointer;
+        }
+        .stack.selected {
+            border: 3px solid #ff0000;
+            background-color: #ffe0e0;
+        }
+        .stack.dragging-over {
+            border-color: #00f;
+            background-color: #d0d0ff;
+        }
+        .card {
+            width: 80px;
+            height: 120px;
+            background-color: white;
+            border: 1px solid #333;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: absolute;
+            cursor: move;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+            transition: transform 0.1s;
+        }
+        .card.dragging {
+            opacity: 0.7;
+            z-index: 1000;
+        }
+        #canvasContainer {
+            width: 50%;
+            height: calc(100vh - 40px);
+            position: fixed;
+            right: 0;
+            top: 20px;
+            border: 2px solid black;
+            box-sizing: border-box;
+        }
+      .chessground {
+	width: min(90vw, 90vh);
+	height: min(90vw, 90vh);
+      }
+
+      cg-board {
+	background-color: #bfcfdd; /* Default chessboard background */
+      }
+
+      /* Dark mode */
+      @media (prefers-color-scheme: dark) {
+	body {
+	  background-color: #1a1a1a; /* Dark background for body */
+	  color: grey;
+	}
+
+	cg-board {
+	  background-color: #3c4b5a; /* Darker chessboard background */
+	}
+      }
+
+      /* Light mode */
+      @media (prefers-color-scheme: light) {
+	body {
+	  background-color: #ffffff; /* Light background for body */
+	}
+
+	cg-board {
+	  background-color: #bfcfdd; /* Light chessboard background */
+	}
+    </style>
+</head>
+<body>
+    <div id="stack1" class="stack" style="left: 50px; top: 50px;"></div>
+    <div id="stack2" class="stack" style="left: 200px; top: 50px;"></div>
+    <div id="stack3" class="stack" style="left: 350px; top: 50px;"></div>
+    <div id="canvasContainer">
+	<div class="chessground" id="chessboard"></div>
+    </div>
+
+    <script type=module>
+        import { Chessground     } from './dist/chessground/src/chessground.js';
+        // Global variable to track selected stack
+        let selectedStackId = null;
+
+	const board = Chessground(document.getElementById('chessboard'), {});
+        // Initialize stacks with cards
+        const stacks = document.querySelectorAll('.stack');
+        const stackData = {
+            stack1: [{ id: 'card1', text: 'Card 1' }, { id: 'card2', text: 'Card 2' }],
+            stack2: [{ id: 'card3', text: 'Card 3' }],
+            stack3: []
+        };
+
+	window.addEventListener('resize', () => console.warn("resizing window NYI"));
+
+        // Create card element
+        function createCardElement(card, index, stackId) {
+            const cardElement = document.createElement('div');
+            cardElement.className = 'card';
+            cardElement.id = card.id;
+            cardElement.textContent = card.text;
+            cardElement.style.top = `${index * 10}px`;
+            cardElement.dataset.stackId = stackId;
+            return cardElement;
+        }
+
+        // Render all cards
+        function renderStacks() {
+            stacks.forEach(stack => {
+                stack.innerHTML = '';
+                const stackId = stack.id;
+                stackData[stackId].forEach((card, index) => {
+                    const cardElement = createCardElement(card, index, stackId);
+                    stack.appendChild(cardElement);
+                });
+                stack.classList.toggle('selected', stackId === selectedStackId);
+            });
+            addCardEventListeners();
+        }
+
+        // Add drag event listeners to cards
+        function addCardEventListeners() {
+            document.querySelectorAll('.card').forEach(card => {
+                card.removeEventListener('mousedown', startDragging);
+                card.addEventListener('mousedown', startDragging);
+                card.addEventListener('contextmenu', e => e.preventDefault());
+            });
+        }
+
+        // Add click event listeners to stacks
+        function addStackEventListeners() {
+            stacks.forEach(stack => {
+                stack.removeEventListener('click', handleStackClick);
+                stack.addEventListener('click', handleStackClick);
+            });
+        }
+
+        function handleStackClick(e) {
+            if (e.target.classList.contains('stack')) {
+                e.stopPropagation();
+                const stackId = e.target.id;
+                selectedStackId = selectedStackId === stackId ? null : stackId;
+                stacks.forEach(stack => {
+                    stack.classList.toggle('selected', stack.id === selectedStackId);
+                });
+            }
+        }
+
+        let draggedCards = [];
+        let offsetX, offsetY;
+
+        function startDragging(e) {
+            e.stopPropagation();
+            const card = e.target;
+            const stackId = card.dataset.stackId;
+            const cardIndex = stackData[stackId].findIndex(c => c.id === card.id);
+            const isRightClick = e.button === 2;
+
+            if (isRightClick) {
+                draggedCards = stackData[stackId].slice(cardIndex).map((c, i) => ({
+                    element: document.getElementById(c.id),
+                    data: c,
+                    originalIndex: cardIndex + i
+                }));
+            } else {
+                draggedCards = [{
+                    element: card,
+                    data: stackData[stackId][cardIndex],
+                    originalIndex: cardIndex
+                }];
+            }
+
+            const cardRect = card.getBoundingClientRect();
+            offsetX = e.clientX - cardRect.left;
+            offsetY = e.clientY - cardRect.top;
+
+            draggedCards.forEach((c, i) => {
+                c.element.classList.add('dragging');
+                c.element.style.position = 'fixed';
+                c.element.style.left = `${cardRect.left - window.scrollX}px`;
+                c.element.style.top = `${cardRect.top - window.scrollY + i * 10}px`;
+                c.element.style.zIndex = 1000 + i;
+            });
+
+            document.addEventListener('mousemove', onDrag);
+            document.addEventListener('mouseup', stopDragging);
+        }
+
+        function onDrag(e) {
+            draggedCards.forEach((c, i) => {
+                c.element.style.left = `${e.clientX - offsetX - window.scrollX}px`;
+                c.element.style.top = `${e.clientY - offsetY - window.scrollY + i * 10}px`;
+            });
+
+            stacks.forEach(stack => {
+                stack.classList.remove('dragging-over');
+                const rect = stack.getBoundingClientRect();
+                if (
+                    e.clientX >= rect.left && e.clientX <= rect.right &&
+                    e.clientY >= rect.top && e.clientY <= rect.bottom
+                ) {
+                    stack.classList.add('dragging-over');
+                }
+            });
+        }
+
+        function stopDragging(e) {
+            document.removeEventListener('mousemove', onDrag);
+            document.removeEventListener('mouseup', stopDragging);
+
+            let targetStack = null;
+            stacks.forEach(stack => {
+                const rect = stack.getBoundingClientRect();
+                if (
+                    e.clientX >= rect.left && e.clientX <= rect.right &&
+                    e.clientY >= rect.top && e.clientY <= rect.bottom
+                ) {
+                    targetStack = stack;
+                }
+                stack.classList.remove('dragging-over');
+            });
+
+            if (targetStack) {
+                const sourceStackId = draggedCards[0].element.dataset.stackId;
+                const targetStackId = targetStack.id;
+
+                const sourceCards = stackData[sourceStackId];
+                draggedCards.forEach(c => {
+                    const index = sourceCards.findIndex(card => card.id === c.data.id);
+                    sourceCards.splice(index, 1);
+                });
+
+                draggedCards.forEach(c => {
+                    stackData[targetStackId].push(c.data);
+                    c.element.dataset.stackId = targetStackId;
+                });
+            }
+
+            draggedCards.forEach(c => {
+                c.element.classList.remove('dragging');
+                c.element.style.position = '';
+                c.element.style.left = '';
+                c.element.style.top = '';
+                c.element.style.zIndex = '';
+            });
+
+            draggedCards = [];
+            renderStacks();
+        }
+
+        // Initialize
+        renderStacks();
+        addStackEventListeners();
+    </script>
+</body>
+</html>
+
+<!-- vi: nowrap nu shiftwidth=4 expandtab
+-->
