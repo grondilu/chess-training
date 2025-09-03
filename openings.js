@@ -30,6 +30,22 @@ const STANDARD_MOVE_ORDERS = {
     "Caro Kann Defense — Advanced Variation": "1.e4 c6 2.d4 d5 3.e5"
 }
 
+function get_nag_priority(nags) {
+    /*
+    Assign a priority score based on NAGs:
+    - 3 (!!): 4 (brilliant)
+    - 1 (!): 3 (good)
+    - 5 (!?): 2 (interesting)
+    - no NAG: 1 (neutral)
+    - others (negative): 0
+    */
+    if      (nags === undefined)  { return 1; }
+    else if (nags.includes('$3')) { return 4; }
+    else if (nags.includes('$1')) { return 3; }
+    else if (nags.includes('$5')) { return 2; }
+    else                          { return 0; }
+}
+
 function extractLines(game, color) {
 
     let result = [],
@@ -54,17 +70,14 @@ function extractLines(game, color) {
 			_extractLines(rav.moves, [...localPrefix]);
 		    }
 		} else {
-		    if ("nags" in move)
-			if (['$2', '$6'].some(x => move.nags.includes(x))) {
-			    console.log(`move ${move.move} is a bad one.  Hopefully a better one is in the variations$`);
-			    if (move.ravs.length > 1) { throw "dealing with multiple variations for the repertoire color is NYI"; }
-			    else {
-				console.log(move);
-				console.warn("switching to alternate line");
-				_extractLines(move.ravs[0].moves, [...localPrefix]);
-				return result;
-			    }
+		    if ("nags" in move) {
+			if (move.ravs.length > 1) { throw "dealing with multiple variations for the repertoire color is NYI"; }
+			else if (get_nag_priority(move.ravs[0].moves[0].nags) > get_nag_priority(move.nags)) {
+			    console.warn("switching to alternate line");
+			    _extractLines(move.ravs[0].moves, [...localPrefix]);
+			    return result;
 			}
+		    }
 		}
 	    localPrefix.push(move);
 	    turn = swapColor(turn);
@@ -130,7 +143,6 @@ var lines = {};
 
 async function main() {
 
-    log(lines);
     let srs     = new SRS(storage, Object.keys(lines));
 
     while (true) {
