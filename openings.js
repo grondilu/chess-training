@@ -70,13 +70,11 @@ function extractLines(game, color) {
 			_extractLines(rav.moves, [...localPrefix]);
 		    }
 		} else {
-		    if ("nags" in move) {
-			if (move.ravs.length > 1) { throw "dealing with multiple variations for the repertoire color is NYI"; }
-			else if (get_nag_priority(move.ravs[0].moves[0].nags) > get_nag_priority(move.nags)) {
-			    console.warn("switching to alternate line");
-			    _extractLines(move.ravs[0].moves, [...localPrefix]);
-			    return result;
-			}
+		    if (move.ravs.length > 1) { throw "dealing with multiple variations for the repertoire color is NYI"; }
+		    else if (get_nag_priority(move.ravs[0].moves[0].nags) > get_nag_priority(move.nags)) {
+			console.warn("switching to alternate line");
+			_extractLines(move.ravs[0].moves, [...localPrefix]);
+			return result;
 		    }
 		}
 	    localPrefix.push(move);
