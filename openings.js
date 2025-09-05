@@ -159,7 +159,7 @@ async function main() {
 	}
 
 	let line    = lines[pick],
-	    success = await quiz(line);
+	    success = await quiz(line, srs);
 
 	if (success) { srs.pass(pick); }
 	else         { srs.fail(pick); }
@@ -212,14 +212,14 @@ function identifyOpening(compacted_moves) {
 	log(identifyOpening(line));
 	*/
 
-async function quiz(line) {
-    console.log(line);
+async function quiz(line, srs) {
     let chess = new Chess(),
 	header = line.header,
 	color = line.color,
 	orientation  = color === white ? 'white' : 'black',
 	moves = [...line.moves], // for cloning
-	board = Chessground(document.getElementById('chessboard'), {});
+	board = Chessground(document.getElementById('chessboard'), {}),
+	{ score, time } = JSON.parse(srs.storage[pack(line)]);
 
     /* example for drawing arrows
     board.set({
@@ -250,10 +250,27 @@ async function quiz(line) {
 	    makeMove(board, move);
 	    //document.getElementById('soundMove').play();
 	}
-    } else {
-	log({ color, turn: getColor(chess.turn()) });
-	log({ fen: line.start, newturn: getColor(chess.turn()) });
     }
+
+    function show() {
+	if (moves.length > 0) {
+	    let move = chess.move(moves[0].move);
+	    board.set({
+		drawable: {
+		    shapes: [
+			{
+			    orig:  move.from,
+			    dest:  move.to,
+			    brush: "blue"
+			}
+		    ]
+		}
+	    });
+	    chess.undo();
+	}
+    };
+
+    if (Math.random() < 1/2**(score+1)) show();
 
     return new Promise(
 	(resolve, reject) => {
@@ -306,6 +323,7 @@ async function quiz(line) {
 						//board.move(nextmove.from, nextmove.to);
 						makeMove(board, nextmove);
 						board.set({ movable: { dests: toDests(chess) } });
+						if (Math.random() < 1/2**(score+1)) show();
 						document.getElementById('soundMove').play();
 					    }
 					    if (moves.length == 0) {
