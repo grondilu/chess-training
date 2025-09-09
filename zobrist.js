@@ -264,20 +264,7 @@ const Random64 = new BigUint64Array(
 	]
 );
 
-const PIECE_HASHES = {
-  p:  0,
-  P:  1,
-  n:  2,
-  N:  3,
-  b:  4,
-  B:  5,
-  r:  6,
-  R:  7,
-  q:  8,
-  Q:  9,
-  k: 10,
-  K: 11,
-};
+const pieces = "pPnNbBrRqQkK";
 
 function piece(fen) {
 	let
@@ -290,7 +277,7 @@ function piece(fen) {
 			for (let rank of ranks) {
 				for (let c of rank) {
 					if (c.match(/[1-8]/)) col+=+c;
-					else yield Random64[64*PIECE_HASHES[c] + 8*row + col++];
+					else yield Random64[64*pieces.indexOf(c) + 8*row + col++];
 				}
 				row--;
 				col=0;

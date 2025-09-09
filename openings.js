@@ -39,11 +39,12 @@ function get_nag_priority(nags) {
     - no NAG: 1 (neutral)
     - others (negative): 0
     */
-    if      (nags === undefined)  { return 1; }
-    else if (nags.includes('$3')) { return 4; }
-    else if (nags.includes('$1')) { return 3; }
-    else if (nags.includes('$5')) { return 2; }
-    else                          { return 0; }
+
+    if      (nags === undefined)    return 1;
+    else if (nags.includes('$3'))   return 4;
+    else if (nags.includes('$1'))   return 3;
+    else if (nags.includes('$5'))   return 2;
+    else                            return 0;
 }
 
 function extractLines(game, color) {
@@ -64,13 +65,17 @@ function extractLines(game, color) {
 	let localPrefix = [...prefix],
 	    turn = localPrefix.length % 2 == 1 ? black : white;
 	for (const move of moves) {
-	    if ("ravs" in move)
+	    if (move.comments.map(x => x.text).includes("SKIP")) { return; }
+	    else if ("ravs" in move)
 		if (color && color !== turn) {
 		    for (let rav of move.ravs) {
 			_extractLines(rav.moves, [...localPrefix]);
 		    }
 		} else {
-		    if (move.ravs.length > 1) { throw "dealing with multiple variations for the repertoire color is NYI"; }
+		    if (move.ravs.length > 1) {
+			console.log({ moves, move });
+			throw "dealing with multiple variations for the repertoire color is NYI";
+		    }
 		    else if (get_nag_priority(move.ravs[0].moves[0].nags) > get_nag_priority(move.nags)) {
 			console.warn("switching to alternate line");
 			_extractLines(move.ravs[0].moves, [...localPrefix]);
@@ -141,6 +146,16 @@ var lines = {};
 
 async function main() {
 
+    /*// Check repertoire consistency.
+    for (let line in lines) {
+	let game = new Chess();
+	for (let move of lines[line].moves) {
+	    game.move(move.move);
+	    //console.log(zobrist_hash(game.fen()));
+	}
+    }
+    */
+
     let srs     = new SRS(storage, Object.keys(lines));
 
     while (true) {
@@ -174,7 +189,7 @@ Promise.all(
 	for (
 	    let pgn of [
 		"./repertoires/white/Caro-Kann/Shaw/Jouez 1.e4!/I.pgn",
-		"./repertoires/black/shaw - Jouez 1.e4 e5!.pgn",
+		"./repertoires/black/Ntirlis/Jouez 1.e4 e5!.pgn",
 		"./repertoires/black/Nimzo-Indian/Swiercz/I/chapter-1.pgn",
 	    ]
 	) {
