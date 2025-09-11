@@ -46,7 +46,7 @@ Bxe3 Ne5 $1 14.Nf5 Ne4 15.Qd4 Qf6 16.Ng3 d5 $1 ) ( 5.Nf3 Nc6 6.e3 ( 6.dxc5
 compensation is very questionable.} ) 8...exd5 9.exd5 Qe7+ 10.Be2 Nb6 11.
 O-O Bxc3 12.bxc3 Nbxd5 $15 {Here, Black has two extra pawns.  White has 
 some compensation, but two extra pawns seem quite ample.} ) 6...cxd4 7.
-exd4 ( 7.Nxd4 Bc5 $10 ) 7...d5 {This position looks simply fine for Black. 
+exd4 ( 7.Nxd4 Bc5 $10 ) 7...d5 {This position loks simply fine for Black. 
 The white queen does not really belong on the b3-square.} 8.Be2 ( 8.cxd5 
 Nxd5 9.Bd3 Qb6 $5 10.Qc2 $201 ( 10.Bd2 Bd6 11.Qxb6 Nxb6 $10 ) 10...Be7 $1 
 11.a3 Nxd4 12.Nxd4 Qxd4 {Black grabs a pawn and White still needs to prove
@@ -73,4 +73,59 @@ arrow,a5,b7,green]} ) 11...Qc7 12.Be2 a6 13.O-O b6 $15 ) 9...b6 10.Bg2 Bb7
 11.O-O O-O 12.Rac1 ( 12.e3 Qb8 $1 13.Rfd1 Ne5 14.Nde4 Rc8 15.Rac1 f5 16.
 Nxc5 Rxc5 17.e4 Bc6 18.Rd4 f4 ) 12...Qb8 13.Nf3 h6 14.Rfd1 Rd8 15.Qc2 a6 
 $10 *
+
+[Event "chapter 3 — Leningrad Variation"]
+[Site ""]
+[Date "????.??.??"]
+[Round ""]
+[White ""]
+[Black ""]
+[Result "*"]
+
+1.d4 Nf6 2.c4 e6 3.Nc3 Bb4 4.Bg5 {The Leningrad variation of the 
+Nimzo-Indian is an interesting line agains the Nimzo that, if Black does 
+not know what to do, can be pretty annoying.} 4...c5 5.d5 d6 6.e3 ( 6.e4 
+$6 Bxc3+ 7.bxc3 h6 8.Bxf6 Qxf6 $15 ) ( 6.Nf3 $6 h6 7.Bh4 g5 8.Bg3 Ne4 9.
+Nd2 ( 9.Rc1 f5 $1 10.e3 Bxc3+ 11.bxc3 e5 $17 ) 9...Nxc3 10.bxc3 Bxc3 11.
+Rc1 Bg7 $15 {Whie has some compensation but I don't think it's sufficient.
+} ) ( 6.Qc2 exd5 7.cxd5 O-O 8.e3 Nbd7 9.Bd3 h6 10.Bh4 Qa5 $1 11.Ne2 ( 11.
+Rd1 Qxa2 $15 ) 11...Nxd5 $15 ) 6...Bxc3+ 7.bxc3 h6 8.Bh4 e5 {This is the 
+main position of the Leningrad variation.} 9.Qc2 ( 9.f4 $2 Qe7 $1 10.Qe2 (
+10.fxe5 Qxe5 11.Qd2 Ne4 12.Qc2 Nxc3 $19 ) ( 10.Be2 exf4 11.exf4 O-O 12.Nf3
+Re8 $19 ) 10...g5 $1 11.fxg5 Ng4 $17 ) ( 9.Bd3 e4 10.Bc2 g5 $1 11.Bg3 Qe7 
+12.f4 ( 12.h4 Rg8 13.hxg5 hxg5 14.Ne2 Nbd7 $17 ) ( 12.f3 Bf5 13.Ne2 Nbd7 
+14.O-O Nb6 $17 ) ( 12.Ne2 Nbd7 13.Qb1 Nb6 14.Qb3 O-O $17 ) 12...Kd8 $1 13.
+Ne2 Nbd7 14.O-O Nh5 15.Be1 f5 16.Ng3 ( 16.fxg5 hxg5 17.Rxf5 Nb6 $19 ) 
+16...Ng7 $17 ) ( 9.f3 {The idea of this move is to play e4.  In case White
+plays e4, Black is generally happy to push f4} 9...g5 10.Bf2 ( 10.Bg3 e4 (
+10...Kd7 $5 11.Bd3 ( 11.e4 Kc7 12.Bf2 Nbd7 13.Ne2 g4 $5 14.Ng3 Nf8 $15 ) 
+11...Kc7 12.Ne2 Nbd7 13.Qc2 ( 13.O-O h5 $5 ) 13...Qe7 $15 14.h4 ( 14.O-O-O
+Nb6 15.e4 Nh5 $15 ) ( 14.O-O h5 $15 ) 14...Nh5 $1 15.hxg5 hxg5 16.Bf2 Ndf6
+17.g4 ( 17.e4 Bd7 $17 ) 17...e4 $1 18.Bxe4 Nxe4 19.Rxh5 Rxh5 20.gxh5 Nf6 
+21.Ng3 Nd7 $1 $15 {White faces serious issues on the light squares.} ) ) 
+10...e4 $1 11.f4 $6 ( 11.h4 Rg8 12.hxg5 hxg5 13.Ne2 Nbd7 14.Ng3 exf3 15.
+gxf3 Ne5 16.Be2 Kd7 $5 $15 ) 11...Ng4 $1 $17 ) ( 9.Nf3 Bf5 10.Nd2 g5 11.
+Bg3 Nbd7 $6 ( 11...Qe7 $1 12.Be2 ( 12.f3 e4 13.f4 Ng4 $1 $17 ) 12...Nbd7 
+13.f3 Bg6 $1 14.e4 {White has managed to build a strong center.  Now, 
+Black needs to act fast to attack it — otherwise , White will have an 
+advantage.} 14...Nh5 $1 15.Bf2 Nf4 16.Bf1 f5 $1 $15 17.g3 Nh5 18.exf5 Bxf5
+19.g4 e4 $1 $19 ) 12.f3 $1 { [%draw arrow,e3,e4,green]} 12...Bg6 13.e4 Qe7
+14.a4 Nh5 15.Bf2 a5 16.Qb1 b6 17.g3 O-O 18.Bd3 Ng7 19.g4 h5 20.h4 f6 21.
+Nf1 Kf7 22.Ne3 Rh8 23.Kd2 Rh6 24.Nf5 Bxf5 25.gxf5 $18 {Spassky — Short, 
+2001} ) 9...Qe7 {A normal move which I think is also the best one.} 10.Nf3
+( 10.f3 g5 11.Bf2 e4 $1 $17 {Black fully controls the light squares and 
+White has no good way to developp their pieces.} ) ( 10.e4 g5 11.Bg3 Nbd7 
+12.f3 Nf8 13.Bf2 Ng6 $15 ) ( 10.Be2 $5 $146 e4 $6 ( 10...g5 11.Bg3 e4 12.
+f4 $1 Kd8 $5 13.Nh3 Ne8 14.Nf2 f5 15.h3 ( 15.h4 g4 ) 15...Nd7 16.Bh2 gxf4 
+17.Bxf4 Ne5 18.g4 Kc7 $13 ) 11.Bxf6 ( 11.f4 $5 {extremely messy} ) 11...
+gxf6 12.Bd1 f5 13.Ne2 Nd7 14.Nf4 Ne5 15.Be2 $10 ) 10...g5 11.Bg3 e4 $1 12.
+Nd2 Bf5 13.Be2 ( 13.Rb1 O-O 14.h4 b6 15.hxg5 hxg5 16.Be2 Bg6 17.a4 $6 Nbd7
+$17 ) ( 13.f3 Bg6 $17 ) ( 13.f4 Ng4 $1 $17 ) ( 13.h4 O-O $1 14.hxg5 hxg5 
+15.O-O-O ( 15.Nf3 Ng4 $15 ) 15...Nbd7 16.f4 Ng4 17.Re1 Kg7 $15 ) 13...Nbd7
+$1 ( 13...O-O $2 14.f4 $1 exf3 $2 15.Qxf5 fxe2 16.h4 $1 $18 ) 14.h4 $146 (
+14.f4 $2 exf3 15.Qxf5 fxe2 16.Kxe2 O-O-O $1 $17 ) ( 14.O-O-O Bg6 $15 15.h4
+O-O 16.Kb1 Kg7 17.Ka1 Ne5 $15 ) 14...Bh7 $1 {A difficult move, but a 
+really good one.} 15.O-O-O Kf8 $1 16.hxg5 hxg5 17.Rh2 Kg7 18.Rdh1 Ne5 19.
+Qd1 Bg6 20.Qg1 Rae8 21.Rxh8 Rxh8 22.Rxh8 Kxh8 23.Qh2+ Kg7 24.Bxe5 Qxe5 25.
+Qxe5 dxe5 26.g4 *
 

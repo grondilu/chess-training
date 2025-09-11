@@ -30,6 +30,10 @@ const STANDARD_MOVE_ORDERS = {
     "Caro Kann Defense — Advanced Variation": "1.e4 c6 2.d4 d5 3.e5"
 }
 
+const MOVE_PREFERENCES = {
+    [zobrist_hash("r1bqkbnr/pppp1ppp/2n5/8/3pP3/2P2N2/PP3PPP/RNBQKB1R b KQkq - 0 4")]: "d5" 
+}
+
 function get_nag_priority(nags) {
     /*
     Assign a priority score based on NAGs:
@@ -65,8 +69,7 @@ function extractLines(game, color) {
 	let localPrefix = [...prefix],
 	    turn = localPrefix.length % 2 == 1 ? black : white;
 	for (const move of moves) {
-	    if (move.comments.map(x => x.text).includes("SKIP")) { return; }
-	    else if ("ravs" in move)
+	    if ("ravs" in move)
 		if (color && color !== turn) {
 		    for (let rav of move.ravs) {
 			_extractLines(rav.moves, [...localPrefix]);
@@ -93,9 +96,10 @@ function extractLines(game, color) {
 
 const DEBUG = false;
 const storage = DEBUG ? sessionStorage : localStorage;
-function log(msg) { if (DEBUG) console.log(msg); }
+function log(msg)    { if (DEBUG) console.log(msg); }
 function pick(array) { return array[Math.floor(Math.random()*array.length)] }
 
+/*
 function fix_wrong_uci(fen, uci_move) {
 	if (uci_move == 'e1h1' || uci_move == 'e1a1' || uci_move == 'e8h8' || uci_move == 'e8a8') {
 		let     chess          = new Chess(fen),
@@ -107,6 +111,7 @@ function fix_wrong_uci(fen, uci_move) {
 	}
 	return uci_move;
 }
+*/
 
 const halfMoveRegex = /(?:O-O(?:-O)?|[KQBNR](?:[a-h]|[1-8]|[a-h][1-8])??x?[a-h][1-8]|(?:[a-h]x)?[a-h][1-8](?:=[QBNR])?)\+?!?/g;
 
@@ -146,17 +151,68 @@ var lines = {};
 
 async function main() {
 
-    /*// Check repertoire consistency.
-    for (let line in lines) {
+    let index = {};
+    // First pass: build repertoire index
+    for (let line of Object.values(lines)) {
 	let game = new Chess();
-	for (let move of lines[line].moves) {
+	for (let move of line.moves) {
+	    let fen   = game.fen(),
+	        zhash = zobrist_hash(fen);
+	    if (index[zhash] == undefined) index[zhash] = { fen, lines: [], moves: { [white]: new Set(), [black]: new Set() } }
+	    index[zhash].lines.push(line);
+	    index[zhash].moves[line.color].add(move.move);
 	    game.move(move.move);
-	    //console.log(zobrist_hash(game.fen()));
 	}
     }
-    */
 
-    let srs     = new SRS(storage, Object.keys(lines));
+    // Second pass: enforce repertoire consistency.
+    for (let line of Object.values(lines)) {
+	let game = new Chess();
+	for (let move of line.moves) {
+	    let fen   = game.fen(),
+	        zhash = zobrist_hash(fen);
+	    if (index[zhash] == undefined) index[zhash] = { fen, lines: [], moves: { [white]: new Set(), [black]: new Set() } }
+	    index[zhash].lines.push(line);
+	    index[zhash].moves[line.color].add(move.move);
+	    if (line.color == getColor(game.turn()) && index[zhash].moves[line.color].size > 1) {
+		if (move.move !== MOVE_PREFERENCES[zhash]) {
+		    console.log(`marking ${move.move} in position ${fen} as alternative line`);
+		    line.alternative = true;
+		}
+	    }
+	    game.move(move.move);
+	}
+    }
+
+    // Third pass: handle transpositions
+    for (let line of Object.values(lines)) {
+	let game = new Chess();
+	for (let move of line.moves) game.move(move.move);
+	let fen   = game.fen(),
+	    zhash = zobrist_hash(fen);
+	if (index[zhash] !== undefined) {
+	    let transpositions = index[zhash].lines.filter(x => x.color == line.color);
+	    if (transpositions.length > 0) {
+		delete lines[pack(line)];
+		let { color, header, moves } = line;
+		for (let transposition of transpositions) {
+		    let game = new Chess(),
+			moves = [];
+		    for (let move of transposition.moves) moves.push(move);
+		    while (moves.length > 0) {
+			if (zobrist_hash(game.fen()) == zhash) {
+			    let newline = { color, header, moves: line.moves.concat(moves), transposition: { fen: game.fen(), pgn: game.pgn() } };
+			    lines[pack(newline)] = newline;
+			    break;
+			}
+			game.move(moves.shift().move);
+		    }
+		}
+	    }
+	}
+    }
+
+    let srs     = new SRS(storage, Object.keys(lines).filter(k => !lines[k].alternative));
 
     while (true) {
 	for (let div of ['info', 'pgn']) {
@@ -188,9 +244,9 @@ Promise.all(
     function *() {
 	for (
 	    let pgn of [
-		"./repertoires/white/Caro-Kann/Shaw/Jouez 1.e4!/I.pgn",
-		"./repertoires/black/Ntirlis/Jouez 1.e4 e5!.pgn",
-		"./repertoires/black/Nimzo-Indian/Swiercz/I/chapter-1.pgn",
+		"./repertoires/black/swiercz - Nimzo Indian - I.pgn",
+		"./repertoires/black/ntirlis - jouez 1.e4 e5!.pgn",
+		"./repertoires/white/shaw - jouez 1.e4! - I.pgn"
 	    ]
 	) {
 	    let color = pgn.match(/\/white\//) ? white : black;
@@ -228,6 +284,8 @@ function identifyOpening(compacted_moves) {
 	*/
 
 async function quiz(line, srs) {
+    if (line == undefined) throw "nothing to quiz";
+    if (line.transposition) console.warn(`this is a transposition from ${line.transposition.from}`);
     let chess = new Chess(),
 	header = line.header,
 	color = line.color,
