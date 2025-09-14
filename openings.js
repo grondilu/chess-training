@@ -130,12 +130,10 @@ const PENALITY_DELAY = 5000; //ms
 // https://stackoverflow.com/questions/951021/what-is-the-javascript-version-of-sleep
 function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
 
-function makeMove(board, move) {
+function makeMove(board, move, fen) {
     board.move(move.from, move.to);
     if (move.isEnPassant()) {
-	let row = board.orientation == 'white' ? 4 : 5,
-	    col = move.to.substr(0, 1);
-	board.setPieces(new Map([[col+row], [false]]));
+	board.set({ fen });
     }
 }
 
@@ -320,7 +318,7 @@ async function quiz(line, srs) {
 	if (moves.length > 0) {
 	    let move = chess.move(moves.shift().move);
 	    //board.move(move.from, move.to);
-	    makeMove(board, move);
+	    makeMove(board, move, chess.fen());
 	    //document.getElementById('soundMove').play();
 	}
     }
@@ -374,8 +372,8 @@ async function quiz(line, srs) {
 				    try {
 					let move = chess.move({ from, to }),
 					    expected_move = moves.shift();
-					log({"chosen move": move.san, expected_move});
-					makeMove(board, move);
+					log({move});
+					makeMove(board, move, chess.fen());
 					if (expected_move.comments.length > 0)
 					    for (let comment of expected_move.comments) {
 						console.log(comment);
@@ -394,7 +392,7 @@ async function quiz(line, srs) {
 					    if (moves.length > 0) {
 						let nextmove = chess.move(moves.shift().move);
 						//board.move(nextmove.from, nextmove.to);
-						makeMove(board, nextmove);
+						makeMove(board, nextmove, chess.fen());
 						board.set({ movable: { dests: toDests(chess) } });
 						if (Math.random() < 1/2**(score+1)) show();
 						document.getElementById('soundMove').play();
@@ -413,7 +411,7 @@ async function quiz(line, srs) {
 					    board.set({ fen: chess.fen() });
 					    let move = chess.move(expected_move.move);
 					    //board.move(move.from, move.to);
-					    makeMove(board, move);
+					    makeMove(board, move, chess.fen());
 					    console.log(`http://lichess.org/analysis/pgn/${chess.history().join('_')}`, "_blank");
 					    board.stop();
 					    log("sleeping 1s");
