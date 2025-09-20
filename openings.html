@@ -10,74 +10,113 @@
     <link rel="stylesheet" type="text/css" href="assets/chessground.brown.css" />
     <link rel="stylesheet" type="text/css" href="assets/chessground.cburnett.css" />
     <style>
-      /* Default styles */
-      body {
-	background-color: #ffffff; /* Default light background */
-	display: flex;
-	flex-wrap: wrap;
-      }
+  body {
+    background-color: #ffffff;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(0, 1fr);
+    grid-template-areas:
+      "board"
+      "info";
+    gap: 10px; /* Add gap between grid areas to prevent overlap */
+  }
 
-      body > div {
-	margin: 10px;
-      }
+  @media (min-width: 768px) {
+    body {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-rows: 1fr;
+      grid-template-areas:
+        "board info";
+      gap: 10px; /* Gap for side-by-side layout */
+    }
+  }
 
-      .chessground {
-	width: min(90vw, 90vh);
-	height: min(90vw, 90vh);
-      }
+  .chessboard {
+    grid-area: board;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    aspect-ratio: 1/1;
+    max-width: 100vmin; /* Reduced to 80vmin for more space */
+    max-height: 100vmin; /* Reduced to 80vmin for more space */
+    margin: 0; /* Remove margin; use grid gap instead */
+  }
 
-      cg-board {
-	background-color: #bfcfdd; /* Default chessboard background */
-      }
+  .chessground {
+    width: 100%;
+    height: 100%;
+  }
 
-      /* Dark mode */
-      @media (prefers-color-scheme: dark) {
-	body {
-	  background-color: #1a1a1a; /* Dark background for body */
-	  color: grey;
-	}
+  cg-board {
+    background-color: #bfcfdd;
+  }
 
-	cg-board {
-	  background-color: #3c4b5a; /* Darker chessboard background */
-	}
-      }
+  .info-area {
+    grid-area: info;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
 
-      /* Light mode */
-      @media (prefers-color-scheme: light) {
-	body {
-	  background-color: #ffffff; /* Light background for body */
-	}
+  #info, #pgn, #stats {
+    flex: 1;
+  }
 
-	cg-board {
-	  background-color: #bfcfdd; /* Light chessboard background */
-	}
-      }
-    </style>
+  #histogram {
+    flex: 2;
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+  }
+
+  /* Dark mode */
+  @media (prefers-color-scheme: dark) {
+    body {
+      background-color: #1a1a1a;
+      color: grey;
+    }
+    cg-board {
+      background-color: #3c4b5a;
+    }
+  }
+
+  /* Light mode */
+  @media (prefers-color-scheme: light) {
+    body {
+      background-color: #ffffff;
+    }
+    cg-board {
+      background-color: #bfcfdd;
+    }
+  }
+</style>
 
     <script src="https://unpkg.com/pgn-parser@2.2.1/dist/pgn-parser.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script type="module" src="openings.js"></script>
   </head>
   <body>
-    <audio id=soundMove    src=assets/sounds/move.wav      type="audio/wav"></audio>
-    <audio id=soundTake    src=assets/sounds/take.wav      type="audio/wav"></audio>
-    <audio id=soundCheck   src=assets/sounds/check.wav     type="audio/wav"></audio>
-    <audio id=soundWrong   src=assets/sounds/wrong.wav     type="audio/wav"></audio>
-    <audio id=soundSuccess src=assets/sounds/success.wav   type="audio/wav"></audio>
+    <audio id="soundMove" src="assets/sounds/move.wav" type="audio/wav"></audio>
+    <audio id="soundTake" src="assets/sounds/take.wav" type="audio/wav"></audio>
+    <audio id="soundCheck" src="assets/sounds/check.wav" type="audio/wav"></audio>
+    <audio id="soundWrong" src="assets/sounds/wrong.wav" type="audio/wav"></audio>
+    <audio id="soundSuccess" src="assets/sounds/success.wav" type="audio/wav"></audio>
 
-    <div class="chessground" id="chessboard"></div>
-    <table>
-      <tr>
-	<td> <div id="info"></div> </td>
-      </tr>
-      <tr>
-	<td> <div id="pgn"></div> </td>
-      </tr>
-      <tr>
-	<td> <div id="stats"></div> </td>
-      </tr>
-    </table>
+    <div class="chessboard">
+      <div class="chessground" id="chessboard"></div>
+    </div>
+    <div class="info-area">
+      <div id="info"></div>
+      <div id="pgn"></div>
+      <!-- <div id="stats"></div> -->
+      <canvas id="histogram"></canvas>
+    </div>
   </body>
 </html>
 <!--
-	vi: shiftwidth=2 nu
+  vi: shiftwidth=2 nu
 -->

@@ -147,7 +147,24 @@ function pack({ header, moves, color }) {
 
 var lines = {};
 
+// Resize handler for both Chessground and Canvas
+window.addEventListener('resize', () => {
+  //const wrapper = document.getElementById('chessboard');
+  //console.log('Wrapper size:', wrapper.clientWidth, wrapper.clientHeight);
+  //ground.resize();
+
+  const canvas = document.getElementById('histogram');
+  canvas.width = canvas.clientWidth * devicePixelRatio; // Account for high-DPI screens
+  canvas.height = canvas.clientHeight * devicePixelRatio; // Account for high-DPI screens
+  histogramChart.resize(); // Redraw chart at new resolution
+});
+
+// Initial resize to set correct sizes on load
+window.dispatchEvent(new Event('resize'));
+
 async function main() {
+
+    //const nags = await fetch('./nags.json').then(r => r.json());
 
     let index = {};
     // First pass: build repertoire index
@@ -212,12 +229,35 @@ async function main() {
 
     let srs     = new SRS(storage, Object.keys(lines).filter(k => !lines[k].alternative));
 
+    const ctx = document.getElementById('histogram').getContext('2d');
+    let chart = new Chart(ctx, {
+	type: 'bar',
+	data: {
+	    labels: [...new Array(10).keys()],
+	    datasets: [{
+		data: Array(10).fill(0),
+		backgroundColor: 'rgba(75, 192, 192, 0.8)',
+		borderColor: 'rgba(75, 192, 192, 1)',
+		borderWidth: 1,
+		barPercentage: 1.0, // No gaps between bars
+		categoryPercentage: 1.0 // No gaps between categories
+	    }]
+	},
+	options: { plugins: { legend: { display: false } } }
+    });
+
     while (true) {
+
+	let scores  = srs.items.map($ => JSON.parse(storage.getItem($)).score);
+
+	chart.data.datasets[0].data = [...new Array(10).keys()].map(i => scores.filter(j => i == j).length);
+	chart.update();
+
 	for (let div of ['info', 'pgn']) {
 	    log(`clearing ${div}`);
 	    document.getElementById(div).innerHTML = '';
 	}
-	setTimeout(() => { log("clearing stats"); document.getElementById("stats").innerHTML = '' }, 5000);
+	//setTimeout(() => { log("clearing stats"); document.getElementById("stats").innerHTML = '' }, 5000);
 
 	let     pick;
 	try { pick    = srs.pick(); }
@@ -233,7 +273,7 @@ async function main() {
 	if (success) { srs.pass(pick); }
 	else         { srs.fail(pick); }
 
-	document.getElementById("stats").innerHTML = Array.from(srs.stats.values()).join('/');
+	//document.getElementById("stats").innerHTML = Array.from(srs.stats.values()).join('/');
     }
 }
 
@@ -283,14 +323,32 @@ function identifyOpening(compacted_moves) {
 
 async function quiz(line, srs) {
     if (line == undefined) throw "nothing to quiz";
-    if (line.transposition) console.warn(`this is a transposition from ${line.transposition.from}`);
+    if (line.transposition) console.warn(`this is a transposition from ${line.transposition.pgn}`);
     let chess = new Chess(),
 	header = line.header,
 	color = line.color,
 	orientation  = color === white ? 'white' : 'black',
 	moves = [...line.moves], // for cloning
-	board = Chessground(document.getElementById('chessboard'), {}),
+	board = Chessground(document.getElementById('chessboard'), { resizable: true }),
 	{ score, time } = JSON.parse(srs.storage[pack(line)]);
+
+    // Add annotations (e.g., '!' on e4, '?' on d5)
+    /*
+    const annotations = [
+	{
+	    orig: 'e4', // Square to annotate
+	    label: { text: '!', fill: '#00ff00' } // Green '!' for good move
+	},
+	{
+	    orig: 'd5',
+	    label: { text: '?', fill: '#ff6b6b' } // Red '?' for mistake
+	},
+	{
+	    orig: 'f3',
+	    label: { text: '!!', fill: '#45b7d1' } // Blue '!!' for brilliant
+	}
+    ];
+    */
 
     /* example for drawing arrows
     board.set({
@@ -357,7 +415,7 @@ async function quiz(line, srs) {
 			    pgn += chess.pgn().replaceAll(/\[.*\] ?/g, '');
 			    log({chess, pgn, moves: STANDARD_MOVE_ORDERS[OPENING_ASSUMPTIONS[line.start]], start: line.start });
 			    if (pgn !== '')
-				document.getElementById("info").innerHTML = identifyOpening(pgn.match(halfMoveRegex).join(''));
+				document.getElementById("info").innerHTML = `<h1>${identifyOpening(pgn.match(halfMoveRegex).join(''))}</h1>`;
 			    document.getElementById("pgn").innerHTML = pgn.replaceAll(/\[.*\] ?/g, '');
 			},
 		    },
@@ -372,7 +430,7 @@ async function quiz(line, srs) {
 				    try {
 					let move = chess.move({ from, to }),
 					    expected_move = moves.shift();
-					log({move});
+					log({move, expected_move});
 					makeMove(board, move, chess.fen());
 					if (expected_move.comments.length > 0)
 					    for (let comment of expected_move.comments) {
@@ -434,4 +492,4 @@ async function quiz(line, srs) {
 	});
 }
 
-// vi: shiftwidth=4
+// vi: shiftwidth=4 nowrap nu
